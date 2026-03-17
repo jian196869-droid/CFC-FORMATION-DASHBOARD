@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,596 +27,597 @@
       --radius-lg: 20px;
       --radius-md: 16px;
       --radius-sm: 12px;
-    }* { box-sizing: border-box; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  margin: 0;
-  font-family: Inter, Arial, sans-serif;
-  color: var(--text);
-  background:
-    radial-gradient(circle at 0% 0%, rgba(34,197,94,.12), transparent 20%),
-    radial-gradient(circle at 100% 0%, rgba(56,189,248,.14), transparent 25%),
-    radial-gradient(circle at 50% 100%, rgba(139,92,246,.10), transparent 28%),
-    linear-gradient(180deg, var(--bg-1), var(--bg-2) 42%, var(--bg-3));
-  min-height: 100vh;
-}
-
-.app-shell {
-  max-width: 1520px;
-  margin: 0 auto;
-  padding: 22px;
-}
-
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 18px;
-  flex-wrap: wrap;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.brand-badge {
-  width: 50px;
-  height: 50px;
-  border-radius: 18px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg, rgba(34,197,94,.28), rgba(56,189,248,.28));
-  border: 1px solid var(--line-2);
-  box-shadow: var(--shadow);
-  font-size: 24px;
-}
-
-.brand h1 {
-  margin: 0;
-  font-size: 30px;
-  line-height: 1.05;
-  letter-spacing: -.03em;
-}
-
-.brand p {
-  margin: 4px 0 0;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.pill {
-  padding: 9px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: rgba(255,255,255,.04);
-  color: var(--muted);
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-.layout {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 18px;
-  align-items: start;
-}
-
-.panel {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  backdrop-filter: blur(14px);
-  box-shadow: var(--shadow);
-}
-
-.sidebar {
-  position: sticky;
-  top: 22px;
-  padding: 18px;
-}
-
-.side-section + .side-section {
-  margin-top: 16px;
-}
-
-.side-title {
-  font-size: 12px;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 10px;
-}
-
-.btn, .file-btn {
-  width: 100%;
-  border: 0;
-  cursor: pointer;
-  padding: 12px 14px;
-  border-radius: 14px;
-  color: white;
-  font-weight: 700;
-  font-size: 14px;
-  transition: transform .16s ease, opacity .16s ease, border-color .16s ease;
-}
-
-.btn:hover, .file-btn:hover { transform: translateY(-1px); }
-
-.btn-primary, .file-btn {
-  background: linear-gradient(135deg, var(--accent), #16a34a);
-}
-
-.btn-secondary {
-  background: linear-gradient(135deg, #1e293b, #0f172a);
-  border: 1px solid var(--line);
-}
-
-.btn-purple {
-  background: linear-gradient(135deg, #7c3aed, #4f46e5);
-}
-
-.btn-danger {
-  background: linear-gradient(135deg, #dc2626, #b91c1c);
-}
-
-.btn-inline {
-  width: auto;
-  padding: 10px 13px;
-  border-radius: 12px;
-  font-size: 13px;
-}
-
-.button-stack { display: grid; gap: 10px; }
-input[type="file"] { display: none; }
-
-.helper-card {
-  padding: 14px;
-  border-radius: 18px;
-  background: rgba(255,255,255,.03);
-  border: 1px solid var(--line);
-  line-height: 1.6;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.helper-card strong { color: var(--text); }
-
-.content {
-  display: grid;
-  gap: 18px;
-}
-
-.hero {
-  padding: 22px;
-  display: grid;
-  grid-template-columns: 1.25fr .95fr;
-  gap: 16px;
-  align-items: stretch;
-}
-
-.hero-left {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
-  border-radius: 22px;
-  border: 1px solid var(--line);
-  padding: 22px;
-}
-
-.hero-left::after {
-  content: "";
-  position: absolute;
-  right: -60px;
-  bottom: -60px;
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(56,189,248,.18), transparent 68%);
-  pointer-events: none;
-}
-
-.hero-left h2 {
-  margin: 0 0 10px;
-  font-size: 34px;
-  line-height: 1.04;
-  letter-spacing: -.03em;
-}
-
-.hero-left p {
-  margin: 0 0 18px;
-  color: var(--muted);
-  line-height: 1.7;
-  max-width: 780px;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.hero-right {
-  display: grid;
-  gap: 12px;
-}
-
-.mini-card {
-  padding: 16px;
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-  border: 1px solid var(--line);
-}
-
-.mini-label {
-  font-size: 11px;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 7px;
-}
-
-.mini-card strong {
-  display: block;
-  font-size: 22px;
-  margin-bottom: 6px;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0,1fr));
-  gap: 14px;
-}
-
-.stat-card {
-  padding: 18px;
-  border-radius: 22px;
-  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-  border: 1px solid var(--line);
-}
-
-.stat-label {
-  color: var(--muted);
-  font-size: 13px;
-  margin-bottom: 8px;
-}
-
-.stat-value {
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -.03em;
-}
-
-.stat-sub {
-  margin-top: 6px;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.main-grid {
-  display: grid;
-  grid-template-columns: 1.15fr .85fr;
-  gap: 18px;
-}
-
-.section {
-  padding: 18px;
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
-}
-
-.section-header h3 {
-  margin: 0;
-  font-size: 22px;
-  letter-spacing: -.02em;
-}
-
-.section-sub {
-  margin-top: 6px;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.controls {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.input, .select {
-  min-width: 170px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid var(--line);
-  background: rgba(2,6,23,.74);
-  color: var(--text);
-  outline: none;
-  font-size: 14px;
-}
-
-.talk-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0,1fr));
-  gap: 12px;
-}
-
-.talk-card {
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: 16px;
-  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
-  cursor: pointer;
-  transition: transform .16s ease, border-color .16s ease, background .16s ease;
-}
-
-.talk-card:hover, .talk-card.active {
-  transform: translateY(-2px);
-  border-color: rgba(56,189,248,.32);
-  background: linear-gradient(180deg, rgba(56,189,248,.08), rgba(255,255,255,.02));
-}
-
-.talk-card-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  align-items: flex-start;
-  margin-bottom: 10px;
-}
-
-.talk-name {
-  font-weight: 700;
-  line-height: 1.45;
-  font-size: 15px;
-}
-
-.progress-track {
-  width: 100%;
-  height: 10px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: rgba(255,255,255,.07);
-  margin-bottom: 10px;
-}
-
-.progress-fill {
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-}
-
-.talk-meta {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  flex-wrap: wrap;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.tag {
-  padding: 6px 9px;
-  border-radius: 999px;
-  font-size: 11px;
-  border: 1px solid var(--line);
-  color: var(--muted);
-  white-space: nowrap;
-}
-
-.tag.good { color: #bbf7d0; background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.3); }
-.tag.warn { color: #fde68a; background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.3); }
-.tag.bad { color: #fecaca; background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.3); }
-.tag.info { color: #bae6fd; background: rgba(56,189,248,.12); border-color: rgba(56,189,248,.3); }
-
-.member-list {
-  display: grid;
-  gap: 10px;
-  max-height: 760px;
-  overflow: auto;
-  padding-right: 4px;
-}
-
-.member-card {
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 14px;
-  background: rgba(255,255,255,.02);
-}
-
-.member-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-
-.member-name {
-  font-weight: 800;
-  font-size: 15px;
-}
-
-.member-sub {
-  color: var(--muted);
-  font-size: 13px;
-  margin-top: 4px;
-}
-
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.chip {
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  border: 1px solid var(--line);
-  color: var(--muted);
-  background: rgba(255,255,255,.03);
-}
-
-.chip.ok { color: #bbf7d0; background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.3); }
-.chip.miss { color: #fecaca; background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.3); }
-
-.rank-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-}
-
-.bar-wrap { display: grid; gap: 10px; }
-.bar-item { display: grid; gap: 6px; }
-.bar-line {
-  height: 12px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: rgba(255,255,255,.06);
-}
-.bar-fill {
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--accent-3), var(--accent-2));
-}
-.bar-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  align-items: center;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.table-wrap {
-  overflow: auto;
-  border-radius: 18px;
-  border: 1px solid var(--line);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 680px;
-  background: rgba(255,255,255,.02);
-}
-
-th, td {
-  text-align: left;
-  padding: 12px 10px;
-  border-bottom: 1px solid var(--line);
-  vertical-align: top;
-  font-size: 14px;
-}
-
-th {
-  color: var(--muted);
-  background: rgba(255,255,255,.03);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  position: sticky;
-  top: 0;
-}
-
-.empty {
-  padding: 28px;
-  border: 1px dashed var(--line);
-  border-radius: 18px;
-  text-align: center;
-  color: var(--muted);
-  background: rgba(255,255,255,.02);
-}
-
-.footer-note {
-  color: var(--muted);
-  font-size: 12px;
-  margin-top: 12px;
-  line-height: 1.6;
-}
-
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(2,6,23,.7);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 999;
-}
-
-.modal-backdrop.show { display: flex; }
-
-.modal {
-  width: min(900px, 100%);
-  max-height: 88vh;
-  overflow: auto;
-  background: var(--panel-strong);
-  border: 1px solid var(--line-2);
-  border-radius: 24px;
-  box-shadow: var(--shadow);
-  padding: 20px;
-}
-
-.modal-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  align-items: flex-start;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-}
-
-.close-btn {
-  width: auto;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: rgba(255,255,255,.04);
-  color: var(--text);
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.modal-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-@media (max-width: 1280px) {
-  .layout { grid-template-columns: 1fr; }
-  .sidebar { position: static; }
-  .stats-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
-}
-
-@media (max-width: 1080px) {
-  .hero, .main-grid, .rank-grid, .modal-grid { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 760px) {
-  .app-shell { padding: 14px; }
-  .stats-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .talk-grid { grid-template-columns: 1fr; }
-  .hero-left h2 { font-size: 28px; }
-  .brand h1 { font-size: 25px; }
-  .controls { width: 100%; }
-  .controls .input, .controls .select { width: 100%; min-width: 100%; }
-  .hero-actions .btn-inline { width: 100%; }
-}
-
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(34,197,94,.12), transparent 20%),
+        radial-gradient(circle at 100% 0%, rgba(56,189,248,.14), transparent 25%),
+        radial-gradient(circle at 50% 100%, rgba(139,92,246,.10), transparent 28%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-2) 42%, var(--bg-3));
+      min-height: 100vh;
+    }
+
+    .app-shell {
+      max-width: 1520px;
+      margin: 0 auto;
+      padding: 22px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-badge {
+      width: 50px;
+      height: 50px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(34,197,94,.28), rgba(56,189,248,.28));
+      border: 1px solid var(--line-2);
+      box-shadow: var(--shadow);
+      font-size: 24px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.05;
+      letter-spacing: -.03em;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .pill {
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 22px;
+      padding: 18px;
+    }
+
+    .side-section + .side-section {
+      margin-top: 16px;
+    }
+
+    .side-title {
+      font-size: 12px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .btn, .file-btn {
+      width: 100%;
+      border: 0;
+      cursor: pointer;
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      transition: transform .16s ease, opacity .16s ease, border-color .16s ease;
+    }
+
+    .btn:hover, .file-btn:hover { transform: translateY(-1px); }
+
+    .btn-primary, .file-btn {
+      background: linear-gradient(135deg, var(--accent), #16a34a);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid var(--line);
+    }
+
+    .btn-purple {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+    }
+
+    .btn-inline {
+      width: auto;
+      padding: 10px 13px;
+      border-radius: 12px;
+      font-size: 13px;
+    }
+
+    .button-stack { display: grid; gap: 10px; }
+    input[type="file"] { display: none; }
+
+    .helper-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--line);
+      line-height: 1.6;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .helper-card strong { color: var(--text); }
+
+    .content {
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero {
+      padding: 22px;
+      display: grid;
+      grid-template-columns: 1.25fr .95fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .hero-left {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      padding: 22px;
+    }
+
+    .hero-left::after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      bottom: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(56,189,248,.18), transparent 68%);
+      pointer-events: none;
+    }
+
+    .hero-left h2 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.04;
+      letter-spacing: -.03em;
+    }
+
+    .hero-left p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 780px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .hero-right {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-card {
+      padding: 16px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border: 1px solid var(--line);
+    }
+
+    .mini-label {
+      font-size: 11px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0,1fr));
+      gap: 14px;
+    }
+
+    .stat-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border: 1px solid var(--line);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -.03em;
+    }
+
+    .stat-sub {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+    }
+
+    .section {
+      padding: 18px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .section-header h3 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -.02em;
+    }
+
+    .section-sub {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .input, .select {
+      min-width: 170px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(2,6,23,.74);
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+    }
+
+    .talk-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+    }
+
+    .talk-card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      cursor: pointer;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+
+    .talk-card:hover, .talk-card.active {
+      transform: translateY(-2px);
+      border-color: rgba(56,189,248,.32);
+      background: linear-gradient(180deg, rgba(56,189,248,.08), rgba(255,255,255,.02));
+    }
+
+    .talk-card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .talk-name {
+      font-weight: 700;
+      line-height: 1.45;
+      font-size: 15px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,.07);
+      margin-bottom: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+
+    .talk-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tag {
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .tag.good { color: #bbf7d0; background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.3); }
+    .tag.warn { color: #fde68a; background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.3); }
+    .tag.bad { color: #fecaca; background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.3); }
+    .tag.info { color: #bae6fd; background: rgba(56,189,248,.12); border-color: rgba(56,189,248,.3); }
+
+    .member-list {
+      display: grid;
+      gap: 10px;
+      max-height: 760px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .member-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,.02);
+    }
+
+    .member-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .member-name {
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .member-sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: rgba(255,255,255,.03);
+    }
+
+    .chip.ok { color: #bbf7d0; background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.3); }
+    .chip.miss { color: #fecaca; background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.3); }
+
+    .rank-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .bar-wrap { display: grid; gap: 10px; }
+    .bar-item { display: grid; gap: 6px; }
+    .bar-line {
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,.06);
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent-3), var(--accent-2));
+    }
+    .bar-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 680px;
+      background: rgba(255,255,255,.02);
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      background: rgba(255,255,255,.03);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      position: sticky;
+      top: 0;
+    }
+
+    .empty {
+      padding: 28px;
+      border: 1px dashed var(--line);
+      border-radius: 18px;
+      text-align: center;
+      color: var(--muted);
+      background: rgba(255,255,255,.02);
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 999;
+    }
+
+    .modal-backdrop.show { display: flex; }
+
+    .modal {
+      width: min(900px, 100%);
+      max-height: 88vh;
+      overflow: auto;
+      background: var(--panel-strong);
+      border: 1px solid var(--line-2);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .close-btn {
+      width: auto;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 1280px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .stats-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    }
+
+    @media (max-width: 1080px) {
+      .hero, .main-grid, .rank-grid, .modal-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .app-shell { padding: 14px; }
+      .stats-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .talk-grid { grid-template-columns: 1fr; }
+      .hero-left h2 { font-size: 28px; }
+      .brand h1 { font-size: 25px; }
+      .controls { width: 100%; }
+      .controls .input, .controls .select { width: 100%; min-width: 100%; }
+      .hero-actions .btn-inline { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -632,176 +634,179 @@ th {
         <div class="pill" id="pillStatus">No file loaded</div>
         <div class="pill">GitHub Pages Ready</div>
       </div>
-    </div><div class="layout">
-  <aside class="panel sidebar">
-    <div class="side-section">
-      <div class="side-title">Data Actions</div>
-      <div class="button-stack">
-        <label class="file-btn" for="fileInput">Upload Excel File</label>
-        <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" />
-        <button class="btn btn-secondary" id="loadDemoBtn">Load Demo Data</button>
-        <button class="btn btn-purple" id="exportExcelBtn">Export Summary Excel</button>
-        <button class="btn btn-secondary" id="exportCsvBtn">Export CSV</button>
-        <button class="btn btn-secondary" id="printBtn">Print / Save PDF</button>
-        <button class="btn btn-danger" id="resetBtn">Reset App</button>
-      </div>
     </div>
 
-    <div class="side-section">
-      <div class="side-title">Display Filters</div>
-      <div class="button-stack">
-        <input class="input" id="globalSearch" placeholder="Search member or talk..." />
-        <select class="select" id="householdFilter"><option value="all">All households</option></select>
-        <select class="select" id="unitFilter"><option value="all">All units</option></select>
-        <select class="select" id="statusFilter">
-          <option value="all">All status</option>
-          <option value="complete">Complete only</option>
-          <option value="incomplete">Incomplete only</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="side-section">
-      <div class="side-title">Guide</div>
-      <div class="helper-card">
-        <strong>Best format:</strong> one row per member, one column for each talk.<br><br>
-        <strong>Recommended columns:</strong><br>
-        Name, Household, Unit, Area, Chapter, then formation talk columns.<br><br>
-        <strong>Accepted complete values:</strong><br>
-        yes, done, complete, 1, true, ✓, x
-      </div>
-    </div>
-  </aside>
-
-  <main class="content">
-    <section class="panel hero">
-      <div class="hero-left">
-        <h2>Your full pogi formation app is here 😎</h2>
-        <p>
-          Upload your formation sheet, monitor progress by talk, see the lowest completion areas, search members instantly,
-          open a clean modal for each member, export summary reports, and print a presentation-ready PDF directly from the browser.
-        </p>
-        <div class="hero-actions">
-          <button class="btn btn-inline btn-primary" id="heroUploadBtn">Start with Excel</button>
-          <button class="btn btn-inline btn-secondary" id="heroDemoBtn">Preview Demo</button>
-          <button class="btn btn-inline btn-secondary" id="clearTalkBtn">Clear Selected Talk</button>
-        </div>
-      </div>
-      <div class="hero-right">
-        <div class="mini-card">
-          <div class="mini-label">Current Focus</div>
-          <strong id="focusTitle">All Members Overview</strong>
-          <div class="section-sub" id="focusSubtitle">Upload a file or load demo data to begin.</div>
-        </div>
-        <div class="mini-card">
-          <div class="mini-label">Top Insight</div>
-          <strong id="topInsight">Waiting for data</strong>
-          <div class="section-sub" id="topInsightSub">The app will highlight your lowest completion talk automatically.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="stats-grid" id="statsGrid"></section>
-
-    <section class="main-grid">
-      <div class="panel section">
-        <div class="section-header">
-          <div>
-            <h3>Talk Progress Cards</h3>
-            <div class="section-sub">Click a talk to view members who still need it.</div>
+    <div class="layout">
+      <aside class="panel sidebar">
+        <div class="side-section">
+          <div class="side-title">Data Actions</div>
+          <div class="button-stack">
+            <button class="file-btn" id="uploadBtn" type="button">Upload Excel File</button>
+            <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" />
+            <button class="btn btn-secondary" id="loadDemoBtn">Load Demo Data</button>
+            <button class="btn btn-purple" id="exportExcelBtn">Export Summary Excel</button>
+            <button class="btn btn-secondary" id="exportCsvBtn">Export CSV</button>
+            <button class="btn btn-secondary" id="printBtn">Print / Save PDF</button>
+            <button class="btn btn-danger" id="resetBtn">Reset App</button>
           </div>
-          <div class="controls">
-            <input class="input" id="talkSearch" placeholder="Search talk title..." />
-            <select class="select" id="talkSort">
-              <option value="lowest">Lowest completion first</option>
-              <option value="highest">Highest completion first</option>
-              <option value="az">A to Z</option>
-              <option value="za">Z to A</option>
+        </div>
+
+        <div class="side-section">
+          <div class="side-title">Display Filters</div>
+          <div class="button-stack">
+            <input class="input" id="globalSearch" placeholder="Search member or talk..." />
+            <select class="select" id="householdFilter"><option value="all">All households</option></select>
+            <select class="select" id="unitFilter"><option value="all">All units</option></select>
+            <select class="select" id="statusFilter">
+              <option value="all">All status</option>
+              <option value="complete">Complete only</option>
+              <option value="incomplete">Incomplete only</option>
             </select>
           </div>
         </div>
-        <div id="talkGrid" class="talk-grid"></div>
-      </div>
 
-      <div class="panel section">
-        <div class="section-header">
-          <div>
-            <h3 id="memberPanelTitle">Member Overview</h3>
-            <div class="section-sub" id="memberPanelSub">Search or filter members. Click View for full details.</div>
-          </div>
-          <div class="controls">
-            <input class="input" id="memberSearch" placeholder="Search member name..." />
+        <div class="side-section">
+          <div class="side-title">Guide</div>
+          <div class="helper-card">
+            <strong>Best format:</strong> one row per member, one column for each talk.<br><br>
+            <strong>Recommended columns:</strong><br>
+            Name, Household, Unit, Area, Chapter, then formation talk columns.<br><br>
+            <strong>Accepted complete values:</strong><br>
+            yes, done, complete, 1, true, ✓, x
           </div>
         </div>
-        <div id="memberList" class="member-list"></div>
-      </div>
-    </section>
+      </aside>
 
-    <section class="rank-grid">
-      <div class="panel section">
-        <div class="section-header">
-          <div>
-            <h3>Completion Ranking</h3>
-            <div class="section-sub">Visual ranking of all talk completion percentages.</div>
+      <main class="content">
+        <section class="panel hero">
+          <div class="hero-left">
+            <h2>CFC Formation Tracker</h2>
+            <p>
+              Upload your formation sheet, monitor progress by talk, see the lowest completion areas, search members instantly,
+              open a clean modal for each member, export summary reports, and print a presentation-ready PDF directly from the browser.
+            </p>
+            <div class="hero-actions">
+              <button class="btn btn-inline btn-primary" id="heroUploadBtn">Start with Excel</button>
+              <button class="btn btn-inline btn-secondary" id="heroDemoBtn">Preview Demo</button>
+              <button class="btn btn-inline btn-secondary" id="clearTalkBtn">Clear Selected Talk</button>
+            </div>
           </div>
-        </div>
-        <div id="rankingWrap" class="bar-wrap"></div>
-      </div>
-
-      <div class="panel section">
-        <div class="section-header">
-          <div>
-            <h3>Lowest Completion Talks</h3>
-            <div class="section-sub">Quick action view for the talks needing the most follow-up.</div>
+          <div class="hero-right">
+            <div class="mini-card">
+              <div class="mini-label">Current Focus</div>
+              <strong id="focusTitle">All Members Overview</strong>
+              <div class="section-sub" id="focusSubtitle">Upload a file or load demo data to begin.</div>
+            </div>
+            <div class="mini-card">
+              <div class="mini-label">Top Insight</div>
+              <strong id="topInsight">Waiting for data</strong>
+              <div class="section-sub" id="topInsightSub">The app will highlight your lowest completion talk automatically.</div>
+            </div>
           </div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Talk</th>
-                <th>Completed</th>
-                <th>Missing</th>
-                <th>Percent</th>
-              </tr>
-            </thead>
-            <tbody id="lowestTalksTable"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <section class="panel section">
-      <div class="section-header">
-        <div>
-          <h3>Printable Chapter Summary</h3>
-          <div class="section-sub">Clean summary table that also looks good when printed to PDF.</div>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Household</th>
-              <th>Unit</th>
-              <th>Completed</th>
-              <th>Total</th>
-              <th>Percent</th>
-              <th>Missing Talks</th>
-            </tr>
-          </thead>
-          <tbody id="summaryTableBody"></tbody>
-        </table>
-      </div>
-      <div class="footer-note">
-        GitHub Pages setup: save this file as <strong>index.html</strong> in your repository root, commit, then open <strong>Settings → Pages</strong> and deploy from the main branch root.
-      </div>
-    </section>
-  </main>
-</div>
+        <section class="stats-grid" id="statsGrid"></section>
 
-  </div>  <div class="modal-backdrop" id="memberModalBackdrop">
+        <section class="main-grid">
+          <div class="panel section">
+            <div class="section-header">
+              <div>
+                <h3>Talk Progress Cards</h3>
+                <div class="section-sub">Click a talk to view members who still need it.</div>
+              </div>
+              <div class="controls">
+                <input class="input" id="talkSearch" placeholder="Search talk title..." />
+                <select class="select" id="talkSort">
+                  <option value="lowest">Lowest completion first</option>
+                  <option value="highest">Highest completion first</option>
+                  <option value="az">A to Z</option>
+                  <option value="za">Z to A</option>
+                </select>
+              </div>
+            </div>
+            <div id="talkGrid" class="talk-grid"></div>
+          </div>
+
+          <div class="panel section">
+            <div class="section-header">
+              <div>
+                <h3 id="memberPanelTitle">Member Overview</h3>
+                <div class="section-sub" id="memberPanelSub">Search or filter members. Click View for full details.</div>
+              </div>
+              <div class="controls">
+                <input class="input" id="memberSearch" placeholder="Search member name..." />
+              </div>
+            </div>
+            <div id="memberList" class="member-list"></div>
+          </div>
+        </section>
+
+        <section class="rank-grid">
+          <div class="panel section">
+            <div class="section-header">
+              <div>
+                <h3>Completion Ranking</h3>
+                <div class="section-sub">Visual ranking of all talk completion percentages.</div>
+              </div>
+            </div>
+            <div id="rankingWrap" class="bar-wrap"></div>
+          </div>
+
+          <div class="panel section">
+            <div class="section-header">
+              <div>
+                <h3>Lowest Completion Talks</h3>
+                <div class="section-sub">Quick action view for the talks needing the most follow-up.</div>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Talk</th>
+                    <th>Completed</th>
+                    <th>Missing</th>
+                    <th>Percent</th>
+                  </tr>
+                </thead>
+                <tbody id="lowestTalksTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel section">
+          <div class="section-header">
+            <div>
+              <h3>Printable Chapter Summary</h3>
+              <div class="section-sub">Clean summary table that also looks good when printed to PDF.</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Household</th>
+                  <th>Unit</th>
+                  <th>Completed</th>
+                  <th>Total</th>
+                  <th>Percent</th>
+                  <th>Missing Talks</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody"></tbody>
+            </table>
+          </div>
+          <div class="footer-note">
+            GitHub Pages setup: save this file as <strong>index.html</strong> in your repository root, commit, then open <strong>Settings → Pages</strong> and deploy from the main branch root.
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="memberModalBackdrop">
     <div class="modal">
       <div class="modal-head">
         <div>
@@ -825,7 +830,9 @@ th {
         <div class="chips" id="modalMeta"></div>
       </div>
     </div>
-  </div>  <script>
+  </div>
+
+  <script>
     const COMPLETED_VALUES = new Set(["yes", "y", "done", "complete", "completed", "1", "true", "✓", "check", "checked", "x"]);
     const POSSIBLE_META = ["name", "member", "member name", "full name", "participants", "participant", "household", "unit", "area", "chapter", "gender", "remarks", "status", "contact", "mobile", "phone"];
 
@@ -872,6 +879,7 @@ th {
       topInsight: document.getElementById('topInsight'),
       topInsightSub: document.getElementById('topInsightSub'),
       pillStatus: document.getElementById('pillStatus'),
+      uploadBtn: document.getElementById('uploadBtn'),
       heroUploadBtn: document.getElementById('heroUploadBtn'),
       heroDemoBtn: document.getElementById('heroDemoBtn'),
       clearTalkBtn: document.getElementById('clearTalkBtn'),
@@ -943,8 +951,8 @@ th {
         const completedCount = talks.filter(t => t.done).length;
         const totalTalks = talks.length;
         return {
-          id: m-${idx},
-          name: normalize(row[nameKey]) || Member ${idx + 1},
+          id: `m-${idx}`,
+          name: normalize(row[nameKey]) || `Member ${idx + 1}`,
           meta,
           talks,
           completedCount,
@@ -1024,8 +1032,8 @@ th {
       const stats = [
         ['Total Members', totalMembers, 'Filtered view'],
         ['Total Talks', totalTalks, 'Detected from columns'],
-        ['Fully Complete', fullyComplete, ${totalMembers ? Math.round((fullyComplete/totalMembers)*100) : 0}% of visible members],
-        ['Average Completion', ${avgCompletion}%, 'Across visible members'],
+        ['Fully Complete', fullyComplete, `${totalMembers ? Math.round((fullyComplete/totalMembers)*100) : 0}% of visible members`],
+        ['Average Completion', `${avgCompletion}%`, 'Across visible members'],
         ['Needs Follow-up', incomplete, 'Members still incomplete'],
       ];
 
@@ -1078,10 +1086,10 @@ th {
       const members = getVisibleMembers();
       if (state.selectedTalk) {
         const talk = state.talks.find(t => t.title === state.selectedTalk);
-        els.memberPanelTitle.textContent = Missing Members: ${state.selectedTalk};
-        els.memberPanelSub.textContent = talk ? ${talk.missing} member(s) still need this talk. : 'Filtered talk view';
-        els.focusTitle.textContent = Focus: ${state.selectedTalk};
-        els.focusSubtitle.textContent = talk ? ${talk.missing} members are pending for this talk. : 'Talk selected';
+        els.memberPanelTitle.textContent = `Missing Members: ${state.selectedTalk}`;
+        els.memberPanelSub.textContent = talk ? `${talk.missing} member(s) still need this talk.` : 'Filtered talk view';
+        els.focusTitle.textContent = `Focus: ${state.selectedTalk}`;
+        els.focusSubtitle.textContent = talk ? `${talk.missing} members are pending for this talk.` : 'Talk selected';
       } else {
         els.memberPanelTitle.textContent = 'Member Overview';
         els.memberPanelSub.textContent = 'Search or filter members. Click View for full details.';
@@ -1097,7 +1105,7 @@ th {
       els.memberList.innerHTML = members.map(member => {
         const completed = member.talks.filter(t => t.done).slice(0, 4);
         const missing = member.talks.filter(t => !t.done).slice(0, 4);
-        const meta = Object.entries(member.meta).map(([k,v]) => <span class="chip">${esc(k)}: ${esc(v)}</span>).join('');
+        const meta = Object.entries(member.meta).map(([k,v]) => `<span class="chip">${esc(k)}: ${esc(v)}</span>`).join('');
         return `
           <div class="member-card">
             <div class="member-head">
@@ -1110,11 +1118,11 @@ th {
                 <button class="btn btn-secondary btn-inline view-member-btn" data-id="${member.id}">View</button>
               </div>
             </div>
-            ${meta ? <div class="chips" style="margin-bottom:10px;">${meta}</div> : ''}
+            ${meta ? `<div class="chips" style="margin-bottom:10px;">${meta}</div>` : ''}
             <div class="chips">
-              ${completed.map(t => <span class="chip ok">${esc(t.title)}</span>).join('')}
-              ${missing.map(t => <span class="chip miss">${esc(t.title)}</span>).join('')}
-              ${member.talks.length > 8 ? <span class="chip">+${member.talks.length - 8} more</span> : ''}
+              ${completed.map(t => `<span class="chip ok">${esc(t.title)}</span>`).join('')}
+              ${missing.map(t => `<span class="chip miss">${esc(t.title)}</span>`).join('')}
+              ${member.talks.length > 8 ? `<span class="chip">+${member.talks.length - 8} more</span>` : ''}
             </div>
           </div>
         `;
@@ -1177,8 +1185,8 @@ th {
     function renderFilters() {
       const households = [...new Set(state.members.map(m => m.meta.Household).filter(Boolean))].sort();
       const units = [...new Set(state.members.map(m => m.meta.Unit).filter(Boolean))].sort();
-      els.householdFilter.innerHTML = '<option value="all">All households</option>' + households.map(v => <option value="${esc(v)}">${esc(v)}</option>).join('');
-      els.unitFilter.innerHTML = '<option value="all">All units</option>' + units.map(v => <option value="${esc(v)}">${esc(v)}</option>).join('');
+      els.householdFilter.innerHTML = '<option value="all">All households</option>' + households.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+      els.unitFilter.innerHTML = '<option value="all">All units</option>' + units.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
       els.householdFilter.value = state.filters.household;
       els.unitFilter.value = state.filters.unit;
     }
@@ -1191,9 +1199,9 @@ th {
         return;
       }
       const lowest = [...state.talks].sort((a,b) => a.percent - b.percent)[0];
-      els.topInsight.textContent = lowest ? ${lowest.title} is the current lowest : 'No insight';
-      els.topInsightSub.textContent = lowest ? ${lowest.missing} members still need this talk (${lowest.percent}% completion). : '';
-      els.pillStatus.textContent = ${state.members.length} members • ${state.talks.length} talks loaded;
+      els.topInsight.textContent = lowest ? `${lowest.title} is the current lowest` : 'No insight';
+      els.topInsightSub.textContent = lowest ? `${lowest.missing} members still need this talk (${lowest.percent}% completion).` : '';
+      els.pillStatus.textContent = `${state.members.length} members • ${state.talks.length} talks loaded`;
     }
 
     function renderEmptyState() {
@@ -1228,11 +1236,11 @@ th {
       const completed = member.talks.filter(t => t.done);
       const missing = member.talks.filter(t => !t.done);
       els.modalTitle.textContent = member.name;
-      els.modalSub.textContent = ${member.completedCount}/${member.totalTalks} completed • ${member.percent}% progress;
-      els.modalCompleted.innerHTML = completed.length ? completed.map(t => <span class="chip ok">${esc(t.title)}</span>).join('') : '<span class="chip">None</span>';
-      els.modalMissing.innerHTML = missing.length ? missing.map(t => <span class="chip miss">${esc(t.title)}</span>).join('') : '<span class="chip ok">None</span>';
+      els.modalSub.textContent = `${member.completedCount}/${member.totalTalks} completed • ${member.percent}% progress`;
+      els.modalCompleted.innerHTML = completed.length ? completed.map(t => `<span class="chip ok">${esc(t.title)}</span>`).join('') : '<span class="chip">None</span>';
+      els.modalMissing.innerHTML = missing.length ? missing.map(t => `<span class="chip miss">${esc(t.title)}</span>`).join('') : '<span class="chip ok">None</span>';
       els.modalMeta.innerHTML = Object.entries(member.meta).length
-        ? Object.entries(member.meta).map(([k,v]) => <span class="chip">${esc(k)}: ${esc(v)}</span>).join('')
+        ? Object.entries(member.meta).map(([k,v]) => `<span class="chip">${esc(k)}: ${esc(v)}</span>`).join('')
         : '<span class="chip">No extra details</span>';
       els.memberModalBackdrop.classList.add('show');
     }
@@ -1250,7 +1258,7 @@ th {
         return;
       }
       buildData(rows);
-      els.pillStatus.textContent = ${fileName} loaded;
+      els.pillStatus.textContent = `${fileName} loaded`;
       renderAll();
     }
 
@@ -1264,7 +1272,7 @@ th {
         Chapter: m.meta.Chapter || '',
         Completed_Count: m.completedCount,
         Total_Talks: m.totalTalks,
-        Completion_Percent: ${m.percent}%,
+        Completion_Percent: `${m.percent}%`,
         Missing_Talks: m.talks.filter(t => !t.done).map(t => t.title).join(' | '),
         Completed_Talks: m.talks.filter(t => t.done).map(t => t.title).join(' | '),
       }));
@@ -1282,7 +1290,7 @@ th {
         Unit: m.meta.Unit || '',
         Completed: m.completedCount,
         Total: m.totalTalks,
-        Percent: ${m.percent}%,
+        Percent: `${m.percent}%`,
         Missing_Talks: m.talks.filter(t => !t.done).map(t => t.title).join(' | '),
       }));
       const ws = XLSX.utils.json_to_sheet(rows);
@@ -1336,6 +1344,7 @@ th {
       reader.readAsArrayBuffer(file);
     });
 
+    els.uploadBtn.addEventListener('click', () => els.fileInput.click());
     els.loadDemoBtn.addEventListener('click', loadDemoData);
     els.exportExcelBtn.addEventListener('click', exportExcelSummary);
     els.exportCsvBtn.addEventListener('click', exportCsvSummary);
@@ -1358,5 +1367,6 @@ th {
     window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMemberModal(); });
 
     renderAll();
-  </script></body>
+  </script>
+</body>
 </html>
