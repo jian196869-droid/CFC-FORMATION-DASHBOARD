@@ -7,10 +7,10 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
     :root {
-      --bg1:#eef4ff;
-      --bg2:#dbeafe;
-      --panel:#ffffff;
-      --panel2:#f8fbff;
+      --bg1:#eef3fb;
+      --bg2:#cedaf0;
+      --panel:rgba(255,255,255,.90);
+      --panel2:rgba(15,23,42,.04);
       --line:#d7e3f6;
       --text:#0f172a;
       --muted:#5b6b86;
@@ -31,7 +31,7 @@
       font-family:Inter,Arial,sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at top left, rgba(37,99,235,.10), transparent 24%),
+        radial-gradient(circle at top left, rgba(37,99,235,.14), transparent 24%),
         radial-gradient(circle at top right, rgba(185,137,27,.10), transparent 24%),
         linear-gradient(180deg,var(--bg1),var(--bg2));
       min-height:100vh;
@@ -101,7 +101,7 @@
     .section-head h3{margin:0;font-size:22px}
     .controls{display:flex;gap:10px;flex-wrap:wrap}
     .talk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    .talk-card{padding:16px;border:1px solid var(--line);border-radius:20px;background:#fff;cursor:pointer;transition:.15s transform ease,.15s border-color ease,.15s box-shadow ease}
+    .talk-card{padding:16px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg, rgba(255,255,255,.97), rgba(233,241,252,.94));cursor:pointer;transition:.15s transform ease,.15s border-color ease,.15s box-shadow ease}
     .talk-card:hover,.talk-card.active{transform:translateY(-2px);border-color:#93c5fd;box-shadow:0 10px 24px rgba(37,99,235,.10)}
     .talk-top{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px;align-items:flex-start}
     .talk-name{font-weight:800;line-height:1.45}
@@ -359,7 +359,10 @@
 
     function findNameKey(row){
       const keys = Object.keys(row || {});
-      const preferred = ['nameofhouseholdhead','name','member','member name','full name','participants','participant'];
+      const hasFirst = keys.find(k => ['firstname','first name','givenname','given name'].includes(lower(k)));
+      const hasLast = keys.find(k => ['lastname','last name','surname','familyname','family name'].includes(lower(k)));
+      if(hasFirst && hasLast) return '__COMBINED_NAME__';
+      const preferred = ['name','member','member name','full name','nameofhouseholdhead','participants','participant'];
       for(const p of preferred){ const f = keys.find(k => lower(k) === p); if(f) return f; }
       for(const k of keys){ if(isNaN(row[k]) && normalize(row[k]) !== '') return k; }
       return keys[0] || null;
@@ -369,6 +372,8 @@
       const first = rows[0] || {};
       const keys = Object.keys(first);
       const nameKey = findNameKey(first);
+      const firstNameKey = keys.find(k => ['firstname','first name','givenname','given name'].includes(lower(k)));
+      const lastNameKey = keys.find(k => ['lastname','last name','surname','familyname','family name'].includes(lower(k)));
       const metaMap = {
         Household: keys.find(k => ['household','nameofhouseholdhead'].includes(lower(k))),
         Unit: keys.find(k => ['unit','areaname','area'].includes(lower(k))),
@@ -385,7 +390,9 @@
         const totalTalks = talks.length;
         return {
           id: `m-${idx}`,
-          name: normalize(row[nameKey]) || `Member ${idx+1}`,
+          name: nameKey === '__COMBINED_NAME__'
+            ? normalize(`${normalize(row[lastNameKey])}${normalize(row[lastNameKey]) && normalize(row[firstNameKey]) ? ' ' : ''}${normalize(row[firstNameKey])}`) || `Member ${idx+1}`
+            : normalize(row[nameKey]) || `Member ${idx+1}`,
           meta: {
             Household: metaMap.Household ? normalize(row[metaMap.Household]) : '',
             Unit: metaMap.Unit ? normalize(row[metaMap.Unit]) : '',
