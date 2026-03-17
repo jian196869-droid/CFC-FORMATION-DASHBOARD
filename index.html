@@ -1,287 +1,81 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>CFC Formation Tracker Full</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+// @ts-nocheck
+import React, { useMemo, useRef, useState, Component } from "react";
+import * as XLSX from "xlsx";
+import {
+  Upload,
+  FileSpreadsheet,
+  Search,
+  User,
+  Download,
+  AlertCircle,
+  X,
+  Filter,
+  FileText,
+  BarChart3,
+  PieChart,
+  Lock,
+  Users,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { motion } from "framer-motion";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart as RePieChart,
+  Pie,
+  Cell,
+} from "recharts";
+import jsPDF from "jspdf";
 
-<style>
-body{
-  font-family:Arial;
-  margin:0;
-  background:linear-gradient(180deg,#0f172a,#1e293b);
-  color:white;
-}
+const DEFAULT_TRACKS = {
+  "1st Year": ["ET", "CLPT", "TW", "CO", "MER 1", "FS"],
+  "2nd Year": ["FCL", "SG", "MER 2"],
+  "3rd Year": ["CPR", "HW", "CHE"],
+  "4th Year": ["LPG", "FOS"],
+  "Leaders Track": ["HLT", "ULT", "CLT", "MCR", "STW", "ABBA", "SMB", "UM"],
+};
 
-header{
-  display:flex;
-  align-items:center;
-  gap:15px;
-  padding:15px;
-  background:#020617;
-}
+const TRACK_ORDER = ["1st Year", "2nd Year", "3rd Year", "4th Year", "Leaders Track"];
+const APP_PASSWORD = "ILOVECFC";
 
-header img{
-  width:60px;
-}
+const BASE_COLUMNS = [
+  "Lastname",
+  "Firstname",
+  "MemberIDNo",
+  "PastoralService",
+  "AreaName",
+  "NameOfHouseholdHead",
+];
 
-.container{
-  padding:20px;
-}
-
-.card{
-  background:#111827;
-  border-radius:15px;
-  padding:15px;
-  margin-bottom:15px;
-}
-
-input,select{
-  padding:10px;
-  border-radius:10px;
-  border:none;
-  margin:5px;
-}
-
-button{
-  padding:10px 15px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-}
-
-.btn{
-  background:#2563eb;
-  color:white;
-}
-
-.green{color:#22c55e}
-.red{color:#ef4444}
-</style>
-</head>
-
-<body>
-
-<header>
-  <img src="logo-cfc.png.jpg">
-  <h2>CFC Formation Tracker</h2>
-</header>
-
-<div class="container">
-
-<div class="card" id="stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;"></div>
-
-<div class="card">
-  <h3 style="margin-top:0;">Graphs</h3>
-  <div id="graphSummary"></div>
-  <div id="graphUnits" style="margin-top:20px;"></div>
-</div>
-
-<input type="file" id="upload">
-
-<br>
-
-<input type="text" id="search" placeholder="Search member">
-
-<select id="unit"></select>
-<select id="household"></select>
-
-<div id="members"></div>
-
-</div>
-
-<script>
-
-let data = [];
-
-document.getElementById("upload").addEventListener("change", handleFile);
-
-function handleFile(e){
-  const file = e.target.files[0];
-  const reader = new FileReader();
-
-  reader.onload = function(e){
-    const wb = XLSX.read(e.target.result,{type:"binary"});
-    const sheet = wb.Sheets[wb.SheetNames[0]];
-    data = XLSX.utils.sheet_to_json(sheet);
-
-    process();
-  };
-
-  reader.readAsBinaryString(file);
-}
-
-function process(){
-
-  data = data.map(row=>{
-    const first = row.Firstname || row.FirstName || "";
-    const last = row.Lastname || row.LastName || "";
-    const fallback = row.Name || row.MemberName || row.FullName || row.NameOfHouseholdHead || "";
-    const name = `${last} ${first}`.trim() || fallback;
-
-    const raw = {...row};
-    const nonFormation = new Set([
-      'Firstname','FirstName','Lastname','LastName','Name','MemberName','FullName',
-      'AreaName','Unit','NameOfHouseholdHead','Household','MemberIDNo','MemberID','PastoralService'
-    ]);
-
-    const talks = Object.keys(row).filter(k=>!nonFormation.has(k)).map(k=>({
-      title:k,
-      done:isDone(row[k])
-    }));
-
-    return {
-      name: name.trim(),
-      unit: row.AreaName || row.Unit || "",
-      household: row.NameOfHouseholdHead || row.Household || "",
-      memberId: row.MemberIDNo || row.MemberID || "",
-      pastoralService: row.PastoralService || "",
-      talks,
-      raw
-    };
-  });
-
-  renderFilters();
-  renderStats();
-  renderGraphs();
-  render();
-}
-
-function isDone(value){
-  const v = String(value || '').trim().toLowerCase();
-  return ['yes','done','complete','completed','1','true','x','✓'].includes(v);
-}
-
-function renderFilters(){
-
-  const units = [...new Set(data.map(d=>d.unit))];
-  const households = [...new Set(data.map(d=>d.household))];
-
-  document.getElementById("unit").innerHTML =
-    "<option>All Units</option>" +
-    units.map(u=>`<option>${u}</option>`).join("");
-
-  document.getElementById("household").innerHTML =
-    "<option>All Household</option>" +
-    households.map(h=>`<option>${h}</option>`).join("");
-}
-
-document.getElementById("search").oninput = render;
-document.getElementById("unit").onchange = render;
-document.getElementById("household").onchange = render;
-
-function renderStats(){
-  if(!data.length){
-    document.getElementById('stats').innerHTML = '';
-    return;
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null, resetKey: 0 };
   }
-
-  const totalMembers = data.length;
-  const totalTalks = Math.max(...data.map(d=>d.talks.length),0);
-  const completedMembers = data.filter(d=>d.talks.length && d.talks.every(t=>t.done)).length;
-  const totalDone = data.reduce((s,d)=>s + d.talks.filter(t=>t.done).length, 0);
-  const totalRequired = data.reduce((s,d)=>s + d.talks.length, 0);
-  const completion = totalRequired ? Math.round((totalDone/totalRequired)*100) : 0;
-
-  document.getElementById('stats').innerHTML = [
-    ['Total Members', totalMembers],
-    ['Formation Topics', totalTalks],
-    ['Fully Complete', completedMembers],
-    ['Completion', completion + '%']
-  ].map(([label,val])=>`
-    <div class="card" style="margin:0;background:#0b1220;">
-      <div style="color:#94a3b8;font-size:13px;">${label}</div>
-      <div style="font-size:30px;font-weight:700;margin-top:6px;">${val}</div>
-    </div>
-  `).join('');
-}
-
-function renderGraphs(){
-  if(!data.length){
-    document.getElementById('graphSummary').innerHTML = '';
-    document.getElementById('graphUnits').innerHTML = '';
-    return;
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
   }
-
-  const totalDone = data.reduce((s,d)=>s + d.talks.filter(t=>t.done).length, 0);
-  const totalRequired = data.reduce((s,d)=>s + d.talks.length, 0);
-  const completion = totalRequired ? Math.round((totalDone/totalRequired)*100) : 0;
-  const missing = totalRequired - totalDone;
-
-  document.getElementById('graphSummary').innerHTML = `
-    <div style="margin-bottom:12px;color:#cbd5e1;">Overall completion: <strong>${completion}%</strong></div>
-    <div style="background:#334155;border-radius:999px;height:18px;overflow:hidden;">
-      <div style="width:${completion}%;height:100%;background:linear-gradient(90deg,#22c55e,#3b82f6);"></div>
-    </div>
-    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;color:#cbd5e1;">
-      <span class="green">Completed: ${totalDone}</span>
-      <span class="red">Missing: ${missing}</span>
-      <span>Total Required: ${totalRequired}</span>
-    </div>
-  `;
-
-  const units = {};
-  data.forEach(d=>{
-    const key = d.unit || 'No Unit';
-    if(!units[key]) units[key] = {done:0,total:0};
-    units[key].done += d.talks.filter(t=>t.done).length;
-    units[key].total += d.talks.length;
-  });
-
-  document.getElementById('graphUnits').innerHTML = '<h4 style="margin:0 0 12px 0;">Completion by Unit</h4>' + Object.entries(units).map(([unit,val])=>{
-    const pct = val.total ? Math.round((val.done/val.total)*100) : 0;
-    return `
-      <div style="margin-bottom:12px;">
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px;color:#cbd5e1;">
-          <span>${unit}</span><span>${pct}%</span>
-        </div>
-        <div style="background:#334155;border-radius:999px;height:14px;overflow:hidden;">
-          <div style="width:${pct}%;height:100%;background:linear-gradient(90deg,#60a5fa,#22c55e);"></div>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-function render(){
-
-  let list = data;
-
-  const search = document.getElementById("search").value.toLowerCase();
-  const unit = document.getElementById("unit").value;
-  const household = document.getElementById("household").value;
-
-  list = list.filter(d=>{
-    return (
-      d.name.toLowerCase().includes(search) &&
-      (unit==="All Units" || d.unit===unit) &&
-      (household==="All Household" || d.household===household)
-    );
-  });
-
-  document.getElementById("members").innerHTML =
-    list.map(d=>{
-      const done = d.talks.filter(t=>t.done).length;
-      const total = d.talks.length;
-      const missingTalks = d.talks.filter(t=>!t.done).slice(0,4).map(t=>`<span class="red">${t.title}</span>`).join('<br>');
-      return `
-      <div class="card">
-        <h3>${d.name || 'No Name'}</h3>
-        <p>Unit: ${d.unit}</p>
-        <p>Household: ${d.household}</p>
-        <p>Member ID: ${d.memberId || '-'}</p>
-        <p>Pastoral Service: ${d.pastoralService || '-'}</p>
-        <p><strong>${done}/${total}</strong> completed</p>
-        <div style="background:#334155;border-radius:999px;height:12px;overflow:hidden;margin:10px 0;">
-          <div style="width:${total ? Math.round((done/total)*100) : 0}%;height:100%;background:linear-gradient(90deg,#3b82f6,#22c55e);"></div>
-        </div>
-        <div style="font-size:14px;color:#cbd5e1;">Sample missing talks:</div>
-        <div style="font-size:13px;line-height:1.6;">${missingTalks || '<span class="green">No missing talks</span>'}</div>
-      </div>
-    `}).join("");
-}
-
-</script>
-
-</body>
-</html>
+  componentDidCatch(error, info) {
+    console.error("CFC App error:", error, info);
+  }
+  handleReset() {
+    this.setState((s) => ({ hasError: false, error: null, resetKey: s.resetKey + 1 }));
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
+          <div className="w-full max-w-lg rounded-3xl bg-white p-8 shadow-lg">
+            <div className="mb-4 text-rose-500">
+              <AlertCircle className="h-10 w-10" />
+            </div>
+            <h2 className="
