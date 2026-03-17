@@ -152,10 +152,10 @@
           <div class="muted">Couples for Christ secure dashboard</div>
         </div>
       </div>
-      <div class="muted" style="line-height:1.7">Enter the password to open the dashboard. Default password for this rebuilt version is <strong>ILOVECFC</strong>.</div>
-      <input id="passwordInput" type="password" placeholder="Enter password" />
-      <button class="btn btn-primary" id="passwordBtn" style="width:100%">Open Dashboard</button>
-      <div id="passwordError" class="muted hidden" style="margin-top:10px;color:#b91c1c">Wrong password. Please try again.</div>
+      <div class="muted" style="line-height:1.7">Enter the  to open the dashboard. Default  for this rebuilt version is <strong>ILOVECFC</strong>.</div>
+      <input id="Input" type="" placeholder="Enter " />
+      <button class="btn btn-primary" id="Btn" style="width:100%">Open Dashboard</button>
+      <div id="Error" class="muted hidden" style="margin-top:10px;color:#b91c1c">Wrong . Please try again.</div>
     </div>
   </div>
 
@@ -165,7 +165,7 @@
         <div class="brand-badge"><img alt="CFC logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHBwgHBgoICAkLCgoLDhgQDg0NDh0VFhEYIR8lJCIfIiEmKzcvJik0KSEiMEExNDk7PDcwOyswMi4BCwsLDw4PHRERHTEpIig7Ly8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vL//AABEIAWgBeAMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAEBQIDBgEAB//EAEAQAAEDAgMEBAMHAwMEAwAAAAEAAhEDIQQSMQVBUQYiYXGBEzKRobHB0fAUI1Lh8QcVM2KCorIkQ3OC/8QAGQEAAwEBAQAAAAAAAAAAAAAAAAECAwQF/8QAJREBAAICAgIBAwUAAAAAAAAAAAECEQMhEjFBE1FhInGB8AUj/9oADAMBAAIRAxEAPwD7wREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQERED//Z" /></div>
         <div>
           <h1>CFC Formation Tracker</h1>
-          <p>Replit-style workflow with a cleaner CFC leadership theme and full export tools.</p>
+          <p>CFC leadership dashboard with a cleaner CFC leadership theme and full export tools.</p>
         </div>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -344,7 +344,7 @@
     };
 
     const els = {
-      gate: document.getElementById('gate'), passwordInput: document.getElementById('passwordInput'), passwordBtn: document.getElementById('passwordBtn'), passwordError: document.getElementById('passwordError'),
+      gate: document.getElementById('gate'), Input: document.getElementById('Input'), Btn: document.getElementById('Btn'), Error: document.getElementById('Error'),
       uploadBtn: document.getElementById('uploadBtn'), fileInput: document.getElementById('fileInput'), summaryExcelBtn: document.getElementById('summaryExcelBtn'), summaryPdfBtn: document.getElementById('summaryPdfBtn'), missingFormationBtn: document.getElementById('missingFormationBtn'), exportMemberExcelBtn: document.getElementById('exportMemberExcelBtn'), loadDemoBtn: document.getElementById('loadDemoBtn'), clearTalkBtn: document.getElementById('clearTalkBtn'), resetBtn: document.getElementById('resetBtn'),
       statusPill: document.getElementById('statusPill'), focusTitle: document.getElementById('focusTitle'), focusSub: document.getElementById('focusSub'), insightTitle: document.getElementById('insightTitle'), insightSub: document.getElementById('insightSub'),
       stats: document.getElementById('stats'), globalSearch: document.getElementById('globalSearch'), householdFilter: document.getElementById('householdFilter'), unitFilter: document.getElementById('unitFilter'), statusFilter: document.getElementById('statusFilter'), memberUnitViewFilter: document.getElementById('memberUnitViewFilter'), memberHouseholdViewFilter: document.getElementById('memberHouseholdViewFilter'), talkSearch: document.getElementById('talkSearch'), talkSort: document.getElementById('talkSort'), memberSearch: document.getElementById('memberSearch'),
@@ -632,9 +632,9 @@
       state.rows = demo; buildData(demo); state.selectedTalk = null; renderAll();
     }
 
-    function checkPassword(){ const ok = els.passwordInput.value === APP_PASSWORD; els.passwordError.classList.toggle('hidden', ok); if(ok){ els.gate.classList.add('hidden'); sessionStorage.setItem('cfc_tracker_unlocked', 'yes'); } }
+    function checkPassword(){ const ok = els.Input.value === APP_PASSWORD; els.Error.classList.toggle('hidden', ok); if(ok){ els.gate.classList.add('hidden'); sessionStorage.setItem('cfc_tracker_unlocked', 'yes'); } }
 
-    els.passwordBtn.addEventListener('click', checkPassword);
+    els.Btn.addEventListener('click', checkPassword);
     if(sessionStorage.getItem('cfc_tracker_unlocked') === 'yes') els.gate.classList.add('hidden');
     window.addEventListener('keydown', e => { if(e.key === 'Enter' && !els.gate.classList.contains('hidden')) checkPassword(); if(e.key === 'Escape') closeMemberModal(); });
     els.uploadBtn.addEventListener('click', () => els.fileInput.click());
