@@ -1,672 +1,171 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <img src="logo-cfc.png" style="width:60px;height:60px;object-fit:contain;" />
-  <title>CFC Formation Tracker</title>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <style>
-    :root {
-      --bg1:#eef3fb;
-      --bg2:#cedaf0;
-      --panel:rgba(255,255,255,.90);
-      --panel2:rgba(15,23,42,.04);
-      --line:#d7e3f6;
-      --text:#0f172a;
-      --muted:#5b6b86;
-      --blue:#1d4ed8;
-      --blue2:#2563eb;
-      --gold:#b9891b;
-      --green:#059669;
-      --red:#dc2626;
-      --orange:#d97706;
-      --shadow:0 16px 40px rgba(29,78,216,.10);
-      --r1:28px;
-      --r2:22px;
-      --r3:16px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter,Arial,sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(37,99,235,.14), transparent 24%),
-        radial-gradient(circle at top right, rgba(185,137,27,.10), transparent 24%),
-        linear-gradient(180deg,var(--bg1),var(--bg2));
-      min-height:100vh;
-    }
-    .hidden{display:none!important}
-    .app{max-width:1520px;margin:0 auto;padding:20px}
-    .gate{
-      position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
-      padding:20px;background:rgba(15,23,42,.72);backdrop-filter:blur(8px)
-    }
-    .gate-card{
-      width:min(470px,100%);background:#fff;border:1px solid var(--line);border-radius:30px;
-      box-shadow:0 25px 60px rgba(2,6,23,.25);padding:28px
-    }
-    .gate-head{display:flex;gap:14px;align-items:center;margin-bottom:16px}
-    .logo-box{width:70px;height:70px;border-radius:18px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden}
-    .logo-box img{width:100%;height:100%;object-fit:contain;padding:6px}
-    .gate h1{margin:0;font-size:30px;line-height:1.05}
-    .muted{color:var(--muted)}
-    .gate input{
-      width:100%;padding:15px 16px;border-radius:16px;border:1px solid var(--line);outline:none;font-size:15px;
-      margin:12px 0;background:#f8fbff
-    }
-    .btn{
-      border:0;border-radius:16px;padding:13px 16px;cursor:pointer;font-weight:800;font-size:15px;
-      transition:.15s transform ease,.15s opacity ease,.15s box-shadow ease;
-      box-shadow:var(--shadow)
-    }
-    .btn:hover{transform:translateY(-1px)}
-    .btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff}
-    .btn-soft{background:#fff;color:var(--text);border:1px solid var(--line);box-shadow:none}
-    .btn-green{background:linear-gradient(135deg,#059669,#10b981);color:#fff}
-    .btn-red{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff}
-    .btn-gold{background:linear-gradient(135deg,#b9891b,#d4a72c);color:#fff}
-    .topbar{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
-    .brand{display:flex;gap:14px;align-items:center}
-    .brand-badge{width:68px;height:68px;border-radius:20px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;box-shadow:var(--shadow)}
-    .brand-badge img{width:100%;height:100%;object-fit:contain;padding:6px}
-    .brand h1{margin:0;font-size:32px;line-height:1.02}
-    .brand p{margin:4px 0 0;color:var(--muted)}
-    .pill{padding:10px 14px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted);font-size:13px}
-    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-bottom:18px}
-    .panel{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:var(--r1);box-shadow:var(--shadow)}
-    .hero-left,.hero-right{padding:22px}
-    .hero-left h2{margin:0 0 10px;font-size:38px;line-height:1.02}
-    .hero-left p{margin:0;color:var(--muted);line-height:1.7;max-width:820px}
-    .action-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:20px}
-    .action-grid .btn{width:100%;background:#fff;color:#0f172a;border:1px solid var(--line);box-shadow:none;text-align:left;display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px}
-    .action-grid .primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border:0;box-shadow:var(--shadow)}
-    .mini{padding:18px;border-radius:22px;background:var(--panel2);border:1px solid var(--line)}
-    .mini + .mini{margin-top:12px}
-    .mini-label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-    .mini strong{display:block;font-size:24px;margin-bottom:6px}
-    .stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-bottom:18px}
-    .stat{padding:18px}
-    .stat .label{font-size:13px;color:var(--muted);margin-bottom:8px}
-    .stat .value{font-size:30px;font-weight:900;line-height:1}
-    .stat .sub{font-size:12px;color:var(--muted);margin-top:6px}
-    .layout{display:grid;grid-template-columns:300px 1fr;gap:18px}
-    .sidebar{padding:18px;position:sticky;top:20px;height:fit-content}
-    .side-title{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-    .stack{display:grid;gap:10px}
-    .input,.select{width:100%;padding:13px 14px;border-radius:16px;border:1px solid var(--line);background:#fff;color:var(--text);outline:none;font-size:14px}
-    .main{display:grid;gap:18px}
-    .section{padding:18px}
-    .section-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}
-    .section-head h3{margin:0;font-size:22px}
-    .controls{display:flex;gap:10px;flex-wrap:wrap}
-    .talk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    .talk-card{padding:16px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg, rgba(255,255,255,.97), rgba(233,241,252,.94));cursor:pointer;transition:.15s transform ease,.15s border-color ease,.15s box-shadow ease}
-    .talk-card:hover,.talk-card.active{transform:translateY(-2px);border-color:#93c5fd;box-shadow:0 10px 24px rgba(37,99,235,.10)}
-    .talk-top{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px;align-items:flex-start}
-    .talk-name{font-weight:800;line-height:1.45}
-    .tag{padding:6px 10px;border-radius:999px;font-size:11px;border:1px solid var(--line);white-space:nowrap}
-    .tag.good{background:#ecfdf5;color:#047857;border-color:#bbf7d0}
-    .tag.warn{background:#fffbeb;color:#b45309;border-color:#fde68a}
-    .tag.bad{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
-    .progress{height:10px;border-radius:999px;background:#e8eef9;overflow:hidden;margin-bottom:10px}
-    .progress > div{height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));border-radius:999px}
-    .meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:13px}
-    .member-list{display:grid;gap:10px;max-height:820px;overflow:auto;padding-right:4px}
-    .member-card{padding:15px;border:1px solid var(--line);border-radius:20px;background:#fff}
-    .member-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-    .member-name{font-size:17px;font-weight:900}
-    .chips{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid var(--line);background:#fff;color:var(--muted)}
-    .chip.ok{background:#ecfdf5;color:#047857;border-color:#bbf7d0}
-    .chip.miss{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
-    .split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .graph-wrap{display:grid;gap:12px}
-    .bar-item{display:grid;gap:6px}
-    .bar-head{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:13px}
-    .bar-line{height:12px;border-radius:999px;background:#e8eef9;overflow:hidden}
-    .bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blue),var(--gold))}
-    .donut{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;margin:auto}
-    .donut-inner{width:110px;height:110px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;border:1px solid var(--line)}
-    .table-wrap{overflow:auto;border-radius:20px;border:1px solid var(--line)}
-    table{width:100%;border-collapse:collapse;min-width:680px;background:#fff}
-    th,td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:14px}
-    th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f8fbff;position:sticky;top:0}
-    .empty{padding:30px;border:1px dashed var(--line);border-radius:18px;text-align:center;color:var(--muted);background:#fff}
-    .modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:3000}
-    .modal-backdrop.show{display:flex}
-    .modal{width:min(920px,100%);max-height:88vh;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:28px;box-shadow:0 20px 50px rgba(15,23,42,.25);padding:20px}
-    .modal-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:16px}
-    .footer-note{margin-top:12px;color:var(--muted);font-size:12px;line-height:1.6}
-    @media (max-width:1250px){.layout,.hero,.split{grid-template-columns:1fr}.sidebar{position:static}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
-    @media (max-width:860px){.action-grid,.stats,.talk-grid{grid-template-columns:1fr}.brand h1{font-size:26px}.hero-left h2{font-size:30px}}
-  </style>
+<meta charset="UTF-8">
+<title>CFC Formation Tracker</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+body{
+  font-family:Arial;
+  margin:0;
+  background:linear-gradient(180deg,#0f172a,#1e293b);
+  color:white;
+}
+
+header{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding:15px;
+  background:#020617;
+}
+
+header img{
+  width:60px;
+}
+
+.container{
+  padding:20px;
+}
+
+.card{
+  background:#111827;
+  border-radius:15px;
+  padding:15px;
+  margin-bottom:15px;
+}
+
+input,select{
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  margin:5px;
+}
+
+button{
+  padding:10px 15px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.btn{
+  background:#2563eb;
+  color:white;
+}
+
+.green{color:#22c55e}
+.red{color:#ef4444}
+</style>
 </head>
+
 <body>
-  <div class="gate" id="gate">
-    <div class="gate-card">
-      <div class="gate-head">
-        <div class="logo-box"><img alt="CFC logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHBwgHBgoICAkLCgoLDhgQDg0NDh0VFhEYIR8lJCIfIiEmKzcvJik0KSEiMEExNDk7PDcwOyswMi4BCwsLDw4PHRERHTEpIig7Ly8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vL//AABEIAWgBeAMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAEBQIDBgEAB//EAEAQAAEDAgMEBAMHAwMEAwAAAAEAAhEDIQQSMQVBUQYiYXGBEzKRobHB0fAUI1Lh8QcVM2KCorIkQ3OC/8QAGQEAAwEBAQAAAAAAAAAAAAAAAAECAwQF/8QAJREBAAICAgIBAwUAAAAAAAAAAAECEQMhEjFBE1FhInGB8AUj/9oADAMBAAIRAxEAPwD7wREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQERED//Z" /></div>
-        <div>
-          <h1>CFC Formation Tracker</h1>
-          <div class="muted">Couples for Christ secure dashboard</div>
-        </div>
-      </div>
-      <div class="muted" style="line-height:1.7">Enter the  to open the dashboard. Default  for this rebuilt version is <strong>ILOVECFC</strong>.</div>
-      <input id="Input" type="" placeholder="Enter " />
-      <button class="btn btn-primary" id="Btn" style="width:100%">Open Dashboard</button>
-      <div id="Error" class="muted hidden" style="margin-top:10px;color:#b91c1c">Wrong . Please try again.</div>
-    </div>
-  </div>
 
-  <div class="app">
-    <div class="topbar">
-      <div class="brand">
-        <div class="brand-badge"><img alt="CFC logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHBwgHBgoICAkLCgoLDhgQDg0NDh0VFhEYIR8lJCIfIiEmKzcvJik0KSEiMEExNDk7PDcwOyswMi4BCwsLDw4PHRERHTEpIig7Ly8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vL//AABEIAWgBeAMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAEBQIDBgEAB//EAEAQAAEDAgMEBAMHAwMEAwAAAAEAAhEDIQQSMQVBUQYiYXGBEzKRobHB0fAUI1Lh8QcVM2KCorIkQ3OC/8QAGQEAAwEBAQAAAAAAAAAAAAAAAAECAwQF/8QAJREBAAICAgIBAwUAAAAAAAAAAAECEQMhEjFBE1FhInGB8AUj/9oADAMBAAIRAxEAPwD7wREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQERED//Z" /></div>
-        <div>
-          <h1>CFC Formation Tracker</h1>
-          <p>CFC leadership dashboard with a cleaner CFC leadership theme and full export tools.</p>
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <div class="pill" id="statusPill">No file loaded</div>
-        <div class="pill">Password Protected</div>
-      </div>
-    </div>
+<header>
+  <img src="logo-cfc.png.jpg">
+  <h2>CFC Formation Tracker</h2>
+</header>
 
-    <div class="hero">
-      <div class="panel hero-left">
-        <h2>CFC Formation Tracker</h2>
-        <p>A leadership-ready formation dashboard for filtering members by unit and household, tracking missing talks, and generating printable chapter reports and downloadable Excel exports.</p>
-        <div class="action-grid">
-          <button class="btn primary" id="uploadBtn">⬆️ Upload Excel File</button>
-          <button class="btn" id="summaryExcelBtn">⬇️ Summary Excel</button>
-          <button class="btn" id="summaryPdfBtn">📄 Summary PDF</button>
-          <button class="btn" id="missingFormationBtn">👥 Missing by Formation</button>
-          <button class="btn" id="exportMemberExcelBtn">⬇️ Export Member Excel</button>
-          <button class="btn" id="loadDemoBtn">✨ Load Demo Data</button>
-        </div>
-        <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" class="hidden" />
-      </div>
-      <div class="panel hero-right">
-        <div class="mini">
-          <div class="mini-label">Chapter Focus</div>
-          <strong id="focusTitle">All Members Overview</strong>
-          <div class="muted" id="focusSub">Upload a file to begin.</div>
-        </div>
-        <div class="mini">
-          <div class="mini-label">Leadership Insight</div>
-          <strong id="insightTitle">Waiting for data</strong>
-          <div class="muted" id="insightSub">The lowest completion talk will appear here.</div>
-        </div>
-      </div>
-    </div>
+<div class="container">
 
-    <div class="stats" id="stats"></div>
+<input type="file" id="upload">
 
-    <div class="layout">
-      <aside class="panel sidebar">
-        <div class="side-title">Display Filters</div>
-        <div class="stack">
-          <input class="input" id="globalSearch" placeholder="Search member or talk..." />
-          <select class="select" id="householdFilter"><option value="all">All households</option></select>
-          <select class="select" id="unitFilter"><option value="all">All units</option></select>
-          <select class="select" id="statusFilter">
-            <option value="all">All status</option>
-            <option value="complete">Complete only</option>
-            <option value="incomplete">Incomplete only</option>
-          </select>
-          <select class="select" id="memberUnitViewFilter"><option value="all">View members from all units</option></select>
-          <select class="select" id="memberHouseholdViewFilter"><option value="all">View members from all households</option></select>
-          <button class="btn btn-soft" id="clearTalkBtn">Clear selected talk</button>
-          <button class="btn btn-red" id="resetBtn">Reset app</button>
-        </div>
-      </aside>
+<br>
 
-      <main class="main">
-        <section class="panel section">
-          <div class="section-head">
-            <div>
-              <h3>Visible Graphs</h3>
-              <div class="muted">Quick visual summary for chapter reporting.</div>
-            </div>
-          </div>
-          <div class="split">
-            <div class="panel section" style="padding:18px;border-radius:22px">
-              <div class="side-title">Overall Completion Graph</div>
-              <div id="overallGraph"></div>
-            </div>
-            <div class="panel section" style="padding:18px;border-radius:22px">
-              <div class="side-title">Unit Graph</div>
-              <div id="unitGraph"></div>
-            </div>
-          </div>
-        </section>
+<input type="text" id="search" placeholder="Search member">
 
-        <section class="split">
-          <div class="panel section">
-            <div class="section-head">
-              <div>
-                <h3>Talk Progress</h3>
-                <div class="muted">Click a talk to see members still missing it.</div>
-              </div>
-              <div class="controls">
-                <input class="input" id="talkSearch" placeholder="Search talk title..." />
-                <select class="select" id="talkSort">
-                  <option value="lowest">Lowest completion first</option>
-                  <option value="highest">Highest completion first</option>
-                  <option value="az">A to Z</option>
-                  <option value="za">Z to A</option>
-                </select>
-              </div>
-            </div>
-            <div class="talk-grid" id="talkGrid"></div>
-          </div>
+<select id="unit"></select>
+<select id="household"></select>
 
-          <div class="panel section">
-            <div class="section-head">
-              <div>
-                <h3 id="memberTitle">Member Overview</h3>
-                <div class="muted" id="memberSub">Search members or filter by unit/household.</div>
-              </div>
-              <div class="controls"><input class="input" id="memberSearch" placeholder="Search member name..." /></div>
-            </div>
-            <div class="member-list" id="memberList"></div>
-          </div>
-        </section>
+<div id="members"></div>
 
-        <section class="split">
-          <div class="panel section">
-            <div class="section-head"><div><h3>Completion Ranking</h3><div class="muted">All talks ranked by completion rate.</div></div></div>
-            <div class="graph-wrap" id="rankingWrap"></div>
-          </div>
-          <div class="panel section">
-            <div class="section-head"><div><h3>Lowest Completion Talks</h3><div class="muted">Priority follow-up list.</div></div></div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Talk</th><th>Completed</th><th>Missing</th><th>Percent</th></tr></thead>
-                <tbody id="lowestTalksBody"></tbody>
-              </table>
-            </div>
-          </div>
-        </section>
+</div>
 
-        <section class="panel section">
-          <div class="section-head"><div><h3>Printable Chapter Summary</h3><div class="muted">This section is used for leadership review and PDF printing.</div></div></div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Name</th><th>Household</th><th>Unit</th><th>Completed</th><th>Total</th><th>Percent</th><th>Missing Talks</th></tr></thead>
-              <tbody id="summaryBody"></tbody>
-            </table>
-          </div>
-          <div class="footer-note">GitHub Pages ready. Save as <strong>index.html</strong> in your repo, commit, then refresh the site after deployment.</div>
-        </section>
-      </main>
-    </div>
-  </div>
+<script>
 
-  <div class="modal-backdrop" id="memberModalBackdrop">
-    <div class="modal">
-      <div class="modal-head">
-        <div>
-          <h3 id="modalTitle" style="margin:0;font-size:26px"></h3>
-          <div class="muted" id="modalSub"></div>
-        </div>
-        <button class="btn btn-soft" id="closeModalBtn">Close</button>
-      </div>
-      <div class="split">
-        <div class="panel section" style="padding:16px;border-radius:20px">
-          <div class="side-title">Completed Talks</div>
-          <div class="chips" id="modalCompleted"></div>
-        </div>
-        <div class="panel section" style="padding:16px;border-radius:20px">
-          <div class="side-title">Missing Talks</div>
-          <div class="chips" id="modalMissing"></div>
-        </div>
-      </div>
-      <div class="panel section" style="padding:16px;border-radius:20px;margin-top:16px">
-        <div class="side-title">Member Details</div>
-        <div class="chips" id="modalMeta"></div>
-      </div>
-    </div>
-  </div>
+let data = [];
 
-  <script>
-    const APP_PASSWORD = 'ILOVECFC';
-    const COMPLETED_VALUES = new Set(['yes','y','done','complete','completed','1','true','✓','check','checked','x']);
-    const META_HEADERS = ['name','member','member name','full name','participants','participant','household','unit','area','chapter','areaname','nameofhouseholdhead','member id','pastoral service'];
+document.getElementById("upload").addEventListener("change", handleFile);
 
-    const state = {
-      rows: [], members: [], talks: [], selectedTalk: null,
-      filters: {
-        globalSearch:'', household:'all', unit:'all', status:'all', memberUnitView:'all', memberHouseholdView:'all', talkSearch:'', talkSort:'lowest', memberSearch:''
-      }
+function handleFile(e){
+  const file = e.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function(e){
+    const wb = XLSX.read(e.target.result,{type:"binary"});
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    data = XLSX.utils.sheet_to_json(sheet);
+
+    process();
+  };
+
+  reader.readAsBinaryString(file);
+}
+
+function process(){
+
+  data = data.map(row=>{
+    const name =
+      (row.Lastname || "") + " " + (row.Firstname || "");
+
+    return {
+      name: name.trim(),
+      unit: row.AreaName || "",
+      household: row.NameOfHouseholdHead || "",
+      raw: row
     };
+  });
 
-    const els = {
-      gate: document.getElementById('gate'), Input: document.getElementById('Input'), Btn: document.getElementById('Btn'), Error: document.getElementById('Error'),
-      uploadBtn: document.getElementById('uploadBtn'), fileInput: document.getElementById('fileInput'), summaryExcelBtn: document.getElementById('summaryExcelBtn'), summaryPdfBtn: document.getElementById('summaryPdfBtn'), missingFormationBtn: document.getElementById('missingFormationBtn'), exportMemberExcelBtn: document.getElementById('exportMemberExcelBtn'), loadDemoBtn: document.getElementById('loadDemoBtn'), clearTalkBtn: document.getElementById('clearTalkBtn'), resetBtn: document.getElementById('resetBtn'),
-      statusPill: document.getElementById('statusPill'), focusTitle: document.getElementById('focusTitle'), focusSub: document.getElementById('focusSub'), insightTitle: document.getElementById('insightTitle'), insightSub: document.getElementById('insightSub'),
-      stats: document.getElementById('stats'), globalSearch: document.getElementById('globalSearch'), householdFilter: document.getElementById('householdFilter'), unitFilter: document.getElementById('unitFilter'), statusFilter: document.getElementById('statusFilter'), memberUnitViewFilter: document.getElementById('memberUnitViewFilter'), memberHouseholdViewFilter: document.getElementById('memberHouseholdViewFilter'), talkSearch: document.getElementById('talkSearch'), talkSort: document.getElementById('talkSort'), memberSearch: document.getElementById('memberSearch'),
-      overallGraph: document.getElementById('overallGraph'), unitGraph: document.getElementById('unitGraph'), talkGrid: document.getElementById('talkGrid'), memberList: document.getElementById('memberList'), memberTitle: document.getElementById('memberTitle'), memberSub: document.getElementById('memberSub'), rankingWrap: document.getElementById('rankingWrap'), lowestTalksBody: document.getElementById('lowestTalksBody'), summaryBody: document.getElementById('summaryBody'),
-      memberModalBackdrop: document.getElementById('memberModalBackdrop'), modalTitle: document.getElementById('modalTitle'), modalSub: document.getElementById('modalSub'), modalCompleted: document.getElementById('modalCompleted'), modalMissing: document.getElementById('modalMissing'), modalMeta: document.getElementById('modalMeta'), closeModalBtn: document.getElementById('closeModalBtn')
-    };
+  renderFilters();
+  render();
+}
 
-    function normalize(v){ return String(v ?? '').trim(); }
-    function lower(v){ return normalize(v).toLowerCase(); }
-    function esc(str){ return String(str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;'); }
-    function isComplete(v){ return COMPLETED_VALUES.has(lower(v)); }
+function renderFilters(){
 
-    function findNameKey(row){
-      const keys = Object.keys(row || {});
-      const hasFirst = keys.find(k => ['firstname','first name','givenname','given name'].includes(lower(k)));
-      const hasLast = keys.find(k => ['lastname','last name','surname','familyname','family name'].includes(lower(k)));
-      if(hasFirst && hasLast) return '__COMBINED_NAME__';
-      const preferred = ['name','member','member name','full name','nameofhouseholdhead','participants','participant'];
-      for(const p of preferred){ const f = keys.find(k => lower(k) === p); if(f) return f; }
-      for(const k of keys){ if(isNaN(row[k]) && normalize(row[k]) !== '') return k; }
-      return keys[0] || null;
-    }
+  const units = [...new Set(data.map(d=>d.unit))];
+  const households = [...new Set(data.map(d=>d.household))];
 
-    function buildData(rows){
-      const first = rows[0] || {};
-      const keys = Object.keys(first);
-      const nameKey = findNameKey(first);
-      const firstNameKey = keys.find(k => ['firstname','first name','givenname','given name'].includes(lower(k)));
-      const lastNameKey = keys.find(k => ['lastname','last name','surname','familyname','family name'].includes(lower(k)));
-      const metaMap = {
-        Household: keys.find(k => ['household','nameofhouseholdhead'].includes(lower(k))),
-        Unit: keys.find(k => ['unit','areaname','area'].includes(lower(k))),
-        Area: keys.find(k => ['area','areaname'].includes(lower(k))),
-        Chapter: keys.find(k => lower(k) === 'chapter'),
-        MemberID: keys.find(k => ['member id','memberid'].includes(lower(k))),
-        PastoralService: keys.find(k => ['pastoral service','pastoralservice'].includes(lower(k))),
-      };
-      const talkColumns = keys.filter(k => !META_HEADERS.includes(lower(k)));
+  document.getElementById("unit").innerHTML =
+    "<option>All Units</option>" +
+    units.map(u=>`<option>${u}</option>`).join("");
 
-      state.members = rows.map((row, idx) => {
-        const talks = talkColumns.map(title => ({ title, done: isComplete(row[title]), raw: normalize(row[title]) }));
-        const completedCount = talks.filter(t => t.done).length;
-        const totalTalks = talks.length;
-        return {
-          id: `m-${idx}`,
-          name: nameKey === '__COMBINED_NAME__'
-            ? normalize(`${normalize(row[lastNameKey])}${normalize(row[lastNameKey]) && normalize(row[firstNameKey]) ? ' ' : ''}${normalize(row[firstNameKey])}`) || `Member ${idx+1}`
-            : normalize(row[nameKey]) || `Member ${idx+1}`,
-          meta: {
-            Household: metaMap.Household ? normalize(row[metaMap.Household]) : '',
-            Unit: metaMap.Unit ? normalize(row[metaMap.Unit]) : '',
-            Area: metaMap.Area ? normalize(row[metaMap.Area]) : '',
-            Chapter: metaMap.Chapter ? normalize(row[metaMap.Chapter]) : '',
-            MemberID: metaMap.MemberID ? normalize(row[metaMap.MemberID]) : '',
-            PastoralService: metaMap.PastoralService ? normalize(row[metaMap.PastoralService]) : '',
-          },
-          talks, completedCount, totalTalks,
-          percent: totalTalks ? Math.round((completedCount / totalTalks) * 100) : 0
-        };
-      });
+  document.getElementById("household").innerHTML =
+    "<option>All Household</option>" +
+    households.map(h=>`<option>${h}</option>`).join("");
+}
 
-      state.talks = talkColumns.map(title => {
-        const completed = state.members.filter(m => m.talks.find(t => t.title === title)?.done).length;
-        const missingMembers = state.members.filter(m => !m.talks.find(t => t.title === title)?.done);
-        return { title, completed, total: state.members.length, missing: missingMembers.length, missingMembers, percent: state.members.length ? Math.round((completed / state.members.length) * 100) : 0 };
-      });
-    }
+document.getElementById("search").oninput = render;
+document.getElementById("unit").onchange = render;
+document.getElementById("household").onchange = render;
 
-    function baseMembers(){
-      const g = lower(state.filters.globalSearch);
-      return state.members.filter(m => {
-        const unitVal = m.meta.Unit || m.meta.Area || '';
-        const hhVal = m.meta.Household || '';
-        const okGlobal = !g || lower(m.name).includes(g) || m.talks.some(t => lower(t.title).includes(g));
-        const okHouse = state.filters.household === 'all' || hhVal === state.filters.household;
-        const okUnit = state.filters.unit === 'all' || unitVal === state.filters.unit;
-        const okStatus = state.filters.status === 'all' || (state.filters.status === 'complete' ? (m.completedCount === m.totalTalks && m.totalTalks > 0) : m.completedCount < m.totalTalks);
-        return okGlobal && okHouse && okUnit && okStatus;
-      });
-    }
+function render(){
 
-    function visibleMembers(){
-      let members = baseMembers();
-      if(state.filters.memberUnitView !== 'all') members = members.filter(m => (m.meta.Unit || m.meta.Area || '') === state.filters.memberUnitView);
-      if(state.filters.memberHouseholdView !== 'all') members = members.filter(m => (m.meta.Household || '') === state.filters.memberHouseholdView);
-      const ms = lower(state.filters.memberSearch);
-      if(ms) members = members.filter(m => lower(m.name).includes(ms));
-      if(state.selectedTalk){
-        const talk = state.talks.find(t => t.title === state.selectedTalk);
-        const ids = new Set((talk?.missingMembers || []).map(m => m.id));
-        members = members.filter(m => ids.has(m.id));
-      }
-      return members.sort((a,b) => a.name.localeCompare(b.name));
-    }
+  let list = data;
 
-    function visibleTalks(){
-      const ts = lower(state.filters.talkSearch || state.filters.globalSearch);
-      let talks = state.talks.filter(t => !ts || lower(t.title).includes(ts));
-      const s = state.filters.talkSort;
-      if(s==='lowest') talks.sort((a,b)=>a.percent-b.percent||a.title.localeCompare(b.title));
-      if(s==='highest') talks.sort((a,b)=>b.percent-a.percent||a.title.localeCompare(b.title));
-      if(s==='az') talks.sort((a,b)=>a.title.localeCompare(b.title));
-      if(s==='za') talks.sort((a,b)=>b.title.localeCompare(a.title));
-      return talks;
-    }
+  const search = document.getElementById("search").value.toLowerCase();
+  const unit = document.getElementById("unit").value;
+  const household = document.getElementById("household").value;
 
-    function renderFilters(){
-      const units = [...new Set(state.members.map(m => m.meta.Unit || m.meta.Area).filter(Boolean))].sort();
-      const households = [...new Set(state.members.map(m => m.meta.Household).filter(Boolean))].sort();
-      const fill = (el, first, arr, val) => { el.innerHTML = `<option value="all">${first}</option>` + arr.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join(''); el.value = val; };
-      fill(els.unitFilter, 'All units', units, state.filters.unit);
-      fill(els.memberUnitViewFilter, 'View members from all units', units, state.filters.memberUnitView);
-      fill(els.householdFilter, 'All households', households, state.filters.household);
-      fill(els.memberHouseholdViewFilter, 'View members from all households', households, state.filters.memberHouseholdView);
-    }
+  list = list.filter(d=>{
+    return (
+      d.name.toLowerCase().includes(search) &&
+      (unit==="All Units" || d.unit===unit) &&
+      (household==="All Household" || d.household===household)
+    );
+  });
 
-    function renderStats(){
-      if(!state.members.length){
-        els.stats.innerHTML = ['Total Members','Total Talks','Fully Complete','Average Completion','Needs Follow-up'].map(label => `<div class="panel stat"><div class="label">${label}</div><div class="value">0</div><div class="sub">Waiting for data</div></div>`).join('');
-        return;
-      }
-      const members = baseMembers();
-      const totalMembers = members.length;
-      const totalTalks = state.talks.length;
-      const fully = members.filter(m => m.completedCount === m.totalTalks && m.totalTalks > 0).length;
-      const avg = totalMembers ? Math.round(members.reduce((s,m)=>s+m.percent,0)/totalMembers) : 0;
-      const need = members.filter(m => m.completedCount < m.totalTalks).length;
-      const cards = [
-        ['Total Members', totalMembers, 'Filtered view'],
-        ['Total Talks', totalTalks, 'Detected from columns'],
-        ['Fully Complete', fully, totalMembers ? `${Math.round((fully/totalMembers)*100)}% of visible members` : '0%'],
-        ['Average Completion', `${avg}%`, 'Across visible members'],
-        ['Needs Follow-up', need, 'Members still incomplete']
-      ];
-      els.stats.innerHTML = cards.map(([l,v,s]) => `<div class="panel stat"><div class="label">${l}</div><div class="value">${v}</div><div class="sub">${s}</div></div>`).join('');
-    }
+  document.getElementById("members").innerHTML =
+    list.map(d=>`
+      <div class="card">
+        <h3>${d.name}</h3>
+        <p>Unit: ${d.unit}</p>
+        <p>Household: ${d.household}</p>
+      </div>
+    `).join("");
+}
 
-    function renderGraphs(){
-      if(!state.members.length){
-        els.overallGraph.innerHTML = '<div class="empty">Upload data to show graphs.</div>';
-        els.unitGraph.innerHTML = '<div class="empty">Upload data to show unit graphs.</div>';
-        return;
-      }
-      const members = baseMembers();
-      const totalReq = members.reduce((s,m)=>s+m.totalTalks,0);
-      const totalComp = members.reduce((s,m)=>s+m.completedCount,0);
-      const percent = totalReq ? Math.round((totalComp/totalReq)*100) : 0;
-      const missing = Math.max(totalReq - totalComp, 0);
-      els.overallGraph.innerHTML = `
-        <div style="display:grid;grid-template-columns:160px 1fr;gap:18px;align-items:center">
-          <div class="donut" style="background:conic-gradient(var(--blue) 0 ${percent}%, #e8eef9 ${percent}% 100%)">
-            <div class="donut-inner"><div><div style="font-size:30px;font-weight:900;line-height:1">${percent}%</div><div class="muted" style="font-size:12px;margin-top:6px">overall</div></div></div>
-          </div>
-          <div class="graph-wrap">
-            <div class="bar-item"><div class="bar-head"><span>Completed formations</span><span>${totalComp}</span></div><div class="bar-line"><div class="bar-fill" style="width:${percent}%"></div></div></div>
-            <div class="bar-item"><div class="bar-head"><span>Missing formations</span><span>${missing}</span></div><div class="bar-line"><div class="bar-fill" style="width:${100-percent}%;background:linear-gradient(90deg,#f59e0b,#dc2626)"></div></div></div>
-          </div>
-        </div>`;
+</script>
 
-      const bucket = {};
-      members.forEach(m => {
-        const unit = m.meta.Unit || m.meta.Area || 'Unassigned';
-        if(!bucket[unit]) bucket[unit] = {members:0, done:0, req:0};
-        bucket[unit].members += 1; bucket[unit].done += m.completedCount; bucket[unit].req += m.totalTalks;
-      });
-      const rows = Object.entries(bucket).map(([unit,v]) => ({ unit, members:v.members, percent:v.req ? Math.round((v.done/v.req)*100) : 0 })).sort((a,b)=>a.unit.localeCompare(b.unit));
-      els.unitGraph.innerHTML = rows.length ? rows.map(r => `<div class="bar-item"><div class="bar-head"><span>${esc(r.unit)} <span class="muted">(${r.members} members)</span></span><span>${r.percent}%</span></div><div class="bar-line"><div class="bar-fill" style="width:${r.percent}%;background:linear-gradient(90deg,#2563eb,#b9891b)"></div></div></div>`).join('') : '<div class="empty">No unit data available.</div>';
-    }
-
-    function talkTag(p){ return p>=80 ? '<span class="tag good">Healthy</span>' : p>=50 ? '<span class="tag warn">Watch</span>' : '<span class="tag bad">Low</span>'; }
-
-    function renderTalks(){
-      const talks = visibleTalks();
-      if(!talks.length){ els.talkGrid.innerHTML = '<div class="empty">No talks found.</div>'; return; }
-      els.talkGrid.innerHTML = talks.map(t => `<div class="talk-card ${state.selectedTalk===t.title?'active':''}" data-talk="${esc(t.title)}"><div class="talk-top"><div class="talk-name">${esc(t.title)}</div>${talkTag(t.percent)}</div><div class="progress"><div style="width:${t.percent}%"></div></div><div class="meta"><span>${t.completed}/${t.total} completed</span><span>${t.missing} missing</span><span>${t.percent}%</span></div></div>`).join('');
-      document.querySelectorAll('.talk-card').forEach(card => card.addEventListener('click', () => { state.selectedTalk = state.selectedTalk === card.dataset.talk ? null : card.dataset.talk; renderAll(); }));
-    }
-
-    function renderMembers(){
-      const members = visibleMembers();
-      if(state.selectedTalk){
-        const talk = state.talks.find(t => t.title === state.selectedTalk);
-        els.memberTitle.textContent = `Missing Members: ${state.selectedTalk}`;
-        els.memberSub.textContent = talk ? `${talk.missing} member(s) still need this talk.` : '';
-        els.focusTitle.textContent = `Focus: ${state.selectedTalk}`;
-        els.focusSub.textContent = talk ? `${talk.missing} members are pending for this talk.` : 'Talk selected';
-      } else {
-        els.memberTitle.textContent = 'Member Overview';
-        els.memberSub.textContent = 'Search members or filter by unit/household.';
-        els.focusTitle.textContent = 'All Members Overview';
-        els.focusSub.textContent = 'Use filters on the left or click a talk card.';
-      }
-      if(!members.length){ els.memberList.innerHTML = '<div class="empty">No members match the current filters.</div>'; return; }
-      els.memberList.innerHTML = members.map(m => {
-        const completed = m.talks.filter(t=>t.done).slice(0,4);
-        const missing = m.talks.filter(t=>!t.done).slice(0,4);
-        const meta = [m.meta.Household && `Household: ${m.meta.Household}`, (m.meta.Unit || m.meta.Area) && `Unit: ${m.meta.Unit || m.meta.Area}`, m.meta.PastoralService && `Service: ${m.meta.PastoralService}`].filter(Boolean).map(v => `<span class="chip">${esc(v)}</span>`).join('');
-        return `<div class="member-card"><div class="member-head"><div><div class="member-name">${esc(m.name)}</div><div class="muted">${m.completedCount}/${m.totalTalks} completed • ${m.percent}%</div></div><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="chip">${m.totalTalks - m.completedCount} pending</span><button class="btn btn-soft view-member" data-id="${m.id}">View</button></div></div>${meta ? `<div class="chips" style="margin-bottom:10px">${meta}</div>` : ''}<div class="chips">${completed.map(t=>`<span class="chip ok">${esc(t.title)}</span>`).join('')}${missing.map(t=>`<span class="chip miss">${esc(t.title)}</span>`).join('')}${m.talks.length>8 ? `<span class="chip">+${m.talks.length-8} more</span>` : ''}</div></div>`;
-      }).join('');
-      document.querySelectorAll('.view-member').forEach(b => b.addEventListener('click', () => openMemberModal(b.dataset.id)));
-    }
-
-    function renderRanking(){
-      if(!state.talks.length){ els.rankingWrap.innerHTML = '<div class="empty">Upload data to see ranking.</div>'; return; }
-      const talks = [...state.talks].sort((a,b)=>a.percent-b.percent||a.title.localeCompare(b.title));
-      els.rankingWrap.innerHTML = talks.map(t => `<div class="bar-item"><div class="bar-head"><span>${esc(t.title)}</span><span>${t.percent}%</span></div><div class="bar-line"><div class="bar-fill" style="width:${t.percent}%"></div></div></div>`).join('');
-    }
-
-    function renderLowest(){
-      if(!state.talks.length){ els.lowestTalksBody.innerHTML = '<tr><td colspan="4">No data yet.</td></tr>'; return; }
-      const talks = [...state.talks].sort((a,b)=>a.percent-b.percent).slice(0,8);
-      els.lowestTalksBody.innerHTML = talks.map(t => `<tr><td>${esc(t.title)}</td><td>${t.completed}/${t.total}</td><td>${t.missing}</td><td>${t.percent}%</td></tr>`).join('');
-    }
-
-    function renderSummary(){
-      const members = baseMembers().sort((a,b)=>b.percent-a.percent||a.name.localeCompare(b.name));
-      if(!members.length){ els.summaryBody.innerHTML = '<tr><td colspan="7">No data available.</td></tr>'; return; }
-      els.summaryBody.innerHTML = members.map(m => `<tr><td>${esc(m.name)}</td><td>${esc(m.meta.Household || '')}</td><td>${esc(m.meta.Unit || m.meta.Area || '')}</td><td>${m.completedCount}</td><td>${m.totalTalks}</td><td>${m.percent}%</td><td>${esc(m.talks.filter(t=>!t.done).map(t=>t.title).join(' | '))}</td></tr>`).join('');
-    }
-
-    function renderInsight(){
-      if(!state.talks.length){ els.insightTitle.textContent = 'Waiting for data'; els.insightSub.textContent = 'The lowest completion talk will appear here.'; els.statusPill.textContent = 'No file loaded'; return; }
-      const lowest = [...state.talks].sort((a,b)=>a.percent-b.percent)[0];
-      els.insightTitle.textContent = lowest ? `${lowest.title} is the current lowest` : 'No insight';
-      els.insightSub.textContent = lowest ? `${lowest.missing} members still need this talk (${lowest.percent}% completion).` : '';
-      els.statusPill.textContent = `${state.members.length} members • ${state.talks.length} talks loaded`;
-    }
-
-    function renderAll(){
-      renderFilters(); renderStats(); renderGraphs(); renderTalks(); renderMembers(); renderRanking(); renderLowest(); renderSummary(); renderInsight();
-    }
-
-    function openMemberModal(id){
-      const m = state.members.find(x => x.id === id); if(!m) return;
-      els.modalTitle.textContent = m.name;
-      els.modalSub.textContent = `${m.completedCount}/${m.totalTalks} completed • ${m.percent}% progress`;
-      els.modalCompleted.innerHTML = m.talks.filter(t=>t.done).length ? m.talks.filter(t=>t.done).map(t=>`<span class="chip ok">${esc(t.title)}</span>`).join('') : '<span class="chip">None</span>';
-      els.modalMissing.innerHTML = m.talks.filter(t=>!t.done).length ? m.talks.filter(t=>!t.done).map(t=>`<span class="chip miss">${esc(t.title)}</span>`).join('') : '<span class="chip ok">None</span>';
-      const meta = [];
-      if(m.meta.MemberID) meta.push(`Member ID: ${m.meta.MemberID}`);
-      if(m.meta.PastoralService) meta.push(`Pastoral Service: ${m.meta.PastoralService}`);
-      if(m.meta.Unit || m.meta.Area) meta.push(`Area / Unit: ${m.meta.Unit || m.meta.Area}`);
-      if(m.meta.Household) meta.push(`Household Head: ${m.meta.Household}`);
-      els.modalMeta.innerHTML = meta.length ? meta.map(v=>`<span class="chip">${esc(v)}</span>`).join('') : '<span class="chip">No extra details</span>';
-      els.memberModalBackdrop.classList.add('show');
-    }
-    function closeMemberModal(){ els.memberModalBackdrop.classList.remove('show'); }
-
-    function exportWorkbook(rows, sheetName, fileName){ const ws = XLSX.utils.json_to_sheet(rows); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, sheetName); XLSX.writeFile(wb, fileName); }
-    function exportSummaryByUnit(){
-      if(!state.members.length) return alert('Please upload data first.');
-      const bucket = {};
-      baseMembers().forEach(m => {
-        const unit = m.meta.Unit || m.meta.Area || 'Unassigned';
-        if(!bucket[unit]) bucket[unit] = { Unit: unit, Members: 0, Completed_Formations: 0, Total_Required_Formations: 0 };
-        bucket[unit].Members += 1; bucket[unit].Completed_Formations += m.completedCount; bucket[unit].Total_Required_Formations += m.totalTalks;
-      });
-      const rows = Object.values(bucket).map(r => ({ ...r, Completion_Percent: `${r.Total_Required_Formations ? Math.round((r.Completed_Formations/r.Total_Required_Formations)*100) : 0}%` })).sort((a,b)=>a.Unit.localeCompare(b.Unit));
-      exportWorkbook(rows, 'Summary By Unit', 'cfc_summary_by_unit.xlsx');
-    }
-    function exportMemberExcel(){
-      if(!state.members.length) return alert('Please upload data first.');
-      const rows = visibleMembers().map(m => ({ Name: m.name, Household: m.meta.Household || '', Unit: m.meta.Unit || m.meta.Area || '', Member_ID: m.meta.MemberID || '', Pastoral_Service: m.meta.PastoralService || '', Completed_Count: m.completedCount, Total_Talks: m.totalTalks, Completion_Percent: `${m.percent}%`, Missing_Talks: m.talks.filter(t=>!t.done).map(t=>t.title).join(' | '), Completed_Talks: m.talks.filter(t=>t.done).map(t=>t.title).join(' | ') }));
-      exportWorkbook(rows, 'Members', 'cfc_member_export.xlsx');
-    }
-    function exportMissingByFormation(){
-      if(!state.talks.length) return alert('Please upload data first.');
-      const rows = [...state.talks].sort((a,b)=>a.title.localeCompare(b.title)).flatMap(t => t.missingMembers.length ? t.missingMembers.map(m => ({ Formation: t.title, Member_Name: m.name, Unit: m.meta.Unit || m.meta.Area || '', Household: m.meta.Household || '', Status: 'Missing' })) : [{ Formation: t.title, Member_Name: '', Unit: '', Household: '', Status: 'No missing members' }]);
-      exportWorkbook(rows, 'Missing By Formation', 'cfc_missing_by_formation.xlsx');
-    }
-    function printSummaryPdf(){ window.print(); }
-
-    function parseWorkbook(buffer, fileName='File'){
-      const wb = XLSX.read(buffer, { type:'array' });
-      const ws = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(ws, { defval:'' });
-      if(!rows.length) return alert('No rows found in this file.');
-      state.rows = rows; buildData(rows); state.selectedTalk = null; renderAll(); els.statusPill.textContent = `${fileName} loaded`;
-    }
-
-    function resetApp(){ state.rows=[]; state.members=[]; state.talks=[]; state.selectedTalk=null; state.filters={globalSearch:'', household:'all', unit:'all', status:'all', memberUnitView:'all', memberHouseholdView:'all', talkSearch:'', talkSort:'lowest', memberSearch:''}; ['globalSearch','talkSearch','memberSearch'].forEach(id=>els[id].value=''); ['statusFilter','householdFilter','unitFilter','memberUnitViewFilter','memberHouseholdViewFilter','talkSort'].forEach(id=>{ if(els[id]) els[id].value = id==='talkSort' ? 'lowest' : 'all'; }); renderAll(); }
-
-    function loadDemo(){
-      const demo = [
-        { AreaName:'Unit 1', NameOfHouseholdHead:'ROGELIO JR MARTINEZ', 'One-to-One':'Yes', 'CLP Talk 1':'Yes', 'CLP Talk 2':'No', 'CLP Talk 3':'Yes', 'Covenant Orientation':'No', 'Member ID':'IM-001', 'Pastoral Service':'MEMBER' },
-        { AreaName:'Unit 1', NameOfHouseholdHead:'AGUILAR - MERIAM', 'One-to-One':'No', 'CLP Talk 1':'Yes', 'CLP Talk 2':'No', 'CLP Talk 3':'No', 'Covenant Orientation':'No', 'Member ID':'IM-2020-309351', 'Pastoral Service':'MEMBER' },
-        { AreaName:'Unit 2', NameOfHouseholdHead:'MILANDRO BURGUILLOS', 'One-to-One':'Yes', 'CLP Talk 1':'Yes', 'CLP Talk 2':'Yes', 'CLP Talk 3':'No', 'Covenant Orientation':'Yes', 'Member ID':'IM-221', 'Pastoral Service':'HOLD LEADER' },
-        { AreaName:'Unit 2', NameOfHouseholdHead:'ALIBANGBANG', 'One-to-One':'Yes', 'CLP Talk 1':'No', 'CLP Talk 2':'No', 'CLP Talk 3':'No', 'Covenant Orientation':'No', 'Member ID':'IM-222', 'Pastoral Service':'MEMBER' },
-        { AreaName:'Unit 3', NameOfHouseholdHead:'SONIA', 'One-to-One':'Yes', 'CLP Talk 1':'Yes', 'CLP Talk 2':'Yes', 'CLP Talk 3':'Yes', 'Covenant Orientation':'Yes', 'Member ID':'IM-223', 'Pastoral Service':'CORE' },
-        { AreaName:'Unit 3', NameOfHouseholdHead:'JP', 'One-to-One':'No', 'CLP Talk 1':'No', 'CLP Talk 2':'No', 'CLP Talk 3':'No', 'Covenant Orientation':'No', 'Member ID':'IM-224', 'Pastoral Service':'MEMBER' }
-      ];
-      state.rows = demo; buildData(demo); state.selectedTalk = null; renderAll();
-    }
-
-    function checkPassword(){ const ok = els.Input.value === APP_PASSWORD; els.Error.classList.toggle('hidden', ok); if(ok){ els.gate.classList.add('hidden'); sessionStorage.setItem('cfc_tracker_unlocked', 'yes'); } }
-
-    els.Btn.addEventListener('click', checkPassword);
-    if(sessionStorage.getItem('cfc_tracker_unlocked') === 'yes') els.gate.classList.add('hidden');
-    window.addEventListener('keydown', e => { if(e.key === 'Enter' && !els.gate.classList.contains('hidden')) checkPassword(); if(e.key === 'Escape') closeMemberModal(); });
-    els.uploadBtn.addEventListener('click', () => els.fileInput.click());
-    els.fileInput.addEventListener('change', e => { const f = e.target.files?.[0]; if(!f) return; const r = new FileReader(); r.onload = evt => parseWorkbook(evt.target.result, f.name); r.readAsArrayBuffer(f); });
-    els.summaryExcelBtn.addEventListener('click', exportSummaryByUnit);
-    els.summaryPdfBtn.addEventListener('click', printSummaryPdf);
-    els.missingFormationBtn.addEventListener('click', exportMissingByFormation);
-    els.exportMemberExcelBtn.addEventListener('click', exportMemberExcel);
-    els.loadDemoBtn.addEventListener('click', loadDemo);
-    els.clearTalkBtn.addEventListener('click', () => { state.selectedTalk = null; renderAll(); });
-    els.resetBtn.addEventListener('click', resetApp);
-    els.globalSearch.addEventListener('input', e => { state.filters.globalSearch = e.target.value; renderAll(); });
-    els.householdFilter.addEventListener('change', e => { state.filters.household = e.target.value; renderAll(); });
-    els.unitFilter.addEventListener('change', e => { state.filters.unit = e.target.value; renderAll(); });
-    els.statusFilter.addEventListener('change', e => { state.filters.status = e.target.value; renderAll(); });
-    els.memberUnitViewFilter.addEventListener('change', e => { state.filters.memberUnitView = e.target.value; renderAll(); });
-    els.memberHouseholdViewFilter.addEventListener('change', e => { state.filters.memberHouseholdView = e.target.value; renderAll(); });
-    els.talkSearch.addEventListener('input', e => { state.filters.talkSearch = e.target.value; renderAll(); });
-    els.talkSort.addEventListener('change', e => { state.filters.talkSort = e.target.value; renderAll(); });
-    els.memberSearch.addEventListener('input', e => { state.filters.memberSearch = e.target.value; renderAll(); });
-    els.closeModalBtn.addEventListener('click', closeMemberModal);
-    els.memberModalBackdrop.addEventListener('click', e => { if(e.target === els.memberModalBackdrop) closeMemberModal(); });
-
-    renderAll();
-  </script>
 </body>
 </html>
